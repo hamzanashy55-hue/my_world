@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنصة الأكاديمية الذكية</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            50: '#FDFBF7',
+                            100: '#FBF7EE',
+                            200: '#F4E8D0',
+                            300: '#EBD4A7',
+                            400: '#DFBC77',
+                            500: '#D4A347',
+                            600: '#B88628',
+                            700: '#946619',
+                        }
+                    },
+                    fontFamily: {
+                        tajawal: ['Tajawal', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #FAF8F5 0%, #FFFFFF 50%, #F5EFEB 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 163, 71, 0.2);
+            box-shadow: 0 10px 30px -10px rgba(184, 134, 40, 0.08);
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #B88628 0%, #D4A347 50%, #8C6215 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .faculty-card {
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .faculty-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 32px -8px rgba(212, 163, 71, 0.25);
+            border-color: rgba(212, 163, 71, 0.6);
+        }
+        /* Custom Animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col min-h-screen pb-24">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gold-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSideMenu()" class="p-2 rounded-xl text-gold-700 hover:bg-gold-50 transition border border-gold-200">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-gold-500 to-gold-300 flex items-center justify-center text-white shadow-md">
+                        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                    </div>
+                    <span class="font-extrabold text-xl gold-gradient-text">المنصة الذكية</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="navigateTo('ai-hub')" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold-50 border border-gold-300 text-gold-700 text-sm font-semibold hover:bg-gold-100 transition">
+                    <i data-lucide="sparkles" class="w-4 h-4 animate-spin text-gold-500"></i>
+                    <span>مساعد AI الموحد</span>
+                </button>
+                <button onclick="navigateTo('profile')" class="flex items-center gap-2 p-1.5 pr-3 rounded-full bg-white border border-gold-300 shadow-sm hover:border-gold-500 transition">
+                    <span class="text-xs font-bold text-slate-700 hidden md:block">حساب الطالب</span>
+                    <div class="w-8 h-8 rounded-full bg-gold-100 border border-gold-400 flex items-center justify-center text-gold-700 font-bold text-sm">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Side Menu Modal -->
+    <div id="sideMenu" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden transition-opacity">
+        <div class="absolute right-0 top-0 h-full w-80 bg-white p-6 shadow-2xl flex flex-col border-l border-gold-200">
+            <div class="flex justify-between items-center pb-4 border-b border-slate-100">
+                <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                    <i data-lucide="layout-grid" class="w-5 h-5 text-gold-500"></i>
+                    القائمة الرئيسية
+                </h3>
+                <button onclick="toggleSideMenu()" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <nav class="mt-6 flex flex-col gap-2 flex-grow">
+                <button onclick="navigateTo('home'); toggleSideMenu();" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gold-50 text-slate-700 hover:text-gold-700 font-semibold transition">
+                    <i data-lucide="home" class="w-5 h-5 text-gold-500"></i> الرئيسية للكليات
+                </button>
+                <button onclick="navigateTo('profile'); toggleSideMenu();" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gold-50 text-slate-700 hover:text-gold-700 font-semibold transition">
+                    <i data-lucide="user-check" class="w-5 h-5 text-gold-500"></i> الملف الشخصي الأكاديمي
+                </button>
+                <button onclick="navigateTo('ai-hub'); toggleSideMenu();" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gold-50 text-slate-700 hover:text-gold-700 font-semibold transition">
+                    <i data-lucide="bot" class="w-5 h-5 text-gold-500"></i> مركز الذكاء الاصطناعي (AI Hub)
+                </button>
+                <button onclick="navigateTo('upload'); toggleSideMenu();" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gold-50 text-slate-700 hover:text-gold-700 font-semibold transition">
+                    <i data-lucide="cloud-upload" class="w-5 h-5 text-gold-500"></i> رفع المحاضرات والكتب
+                </button>
+            </nav>
+
+            <div class="p-4 rounded-xl bg-gold-50 border border-gold-200 text-center">
+                <p class="text-xs text-gold-700 font-bold">بوابة الخدمات الجامعية الموحدة</p>
+                <p class="text-[11px] text-slate-500 mt-1">تصميم خفيف • أبيض وذهبي ملكي</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dynamic Content Wrapper -->
+    <main class="max-w-7xl mx-auto px-4 pt-6 flex-grow">
+
+        <!-- 1. HOME VIEW (Faculties Grid) -->
+        <section id="view-home" class="view-section space-y-8">
+            <div class="text-center space-y-2 py-4">
+                <span class="px-4 py-1.5 rounded-full text-xs font-extrabold bg-gold-100 border border-gold-300 text-gold-700 inline-block shadow-sm">
+                    🏛️ البوابة الأكاديمية للكليات
+                </span>
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    اختر كليتك لمتابعة <span class="gold-gradient-text">المواد والوسائط</span>
+                </h1>
+                <p class="text-slate-500 text-sm max-w-xl mx-auto">
+                    واجهات مخصصة لكل تخصص، رفع مباشر للمقررات والكتب، محاضرات مرئية، ومساعد ذكاء اصطناعي شامل.
+                </p>
+            </div>
+
+            <!-- Colleges List Container -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="facultiesGrid">
+                <!-- JS will inject dynamic cards with themed pastel palettes and custom icons -->
+            </div>
+        </section>
+
+        <!-- 2. FACULTY DETAILS VIEW -->
+        <section id="view-faculty" class="view-section hidden space-y-6">
+            <div class="flex items-center justify-between bg-white p-4 rounded-2xl border border-gold-200 shadow-sm">
+                <button onclick="navigateTo('home')" class="flex items-center gap-2 text-sm font-bold text-gold-700 hover:text-gold-900 bg-gold-50 px-4 py-2 rounded-xl transition">
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i> العودة للكليات
+                </button>
+                <div class="flex items-center gap-3">
+                    <span id="facultyTag" class="px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700"></span>
+                </div>
+            </div>
+
+            <!-- Faculty Custom Hero Banner -->
+            <div id="facultyHero" class="p-8 rounded-3xl relative overflow-hidden transition-all duration-500 border border-gold-200 shadow-md">
+                <!-- Animated Background Objects injected here -->
+                <div class="relative z-10 space-y-3">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-white shadow-md border border-gold-300 text-slate-800" id="facultyHeroIcon"></div>
+                    <h2 class="text-3xl font-extrabold text-slate-900" id="facultyHeroTitle"></h2>
+                    <p class="text-sm text-slate-600 max-w-2xl" id="facultyHeroDesc"></p>
+                </div>
+            </div>
+
+            <!-- Programs & Departments -->
+            <div class="space-y-3">
+                <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                    <i data-lucide="book-marked" class="w-5 h-5 text-gold-500"></i>
+                    الأقسام والبرامج الأكاديمية
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="facultyPrograms">
+                    <!-- Programs injected -->
+                </div>
+            </div>
+
+            <!-- Course Materials & Uploaded Lectures -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4">
+                <!-- Books & Syllabi -->
+                <div class="glass-card p-6 rounded-2xl space-y-4">
+                    <div class="flex justify-between items-center pb-3 border-b border-gold-100">
+                        <h4 class="font-bold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="book-open" class="w-5 h-5 text-gold-600"></i> الكتب والمذكرات الدراسية
+                        </h4>
+                        <button onclick="navigateTo('upload')" class="text-xs bg-gold-500 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-gold-600 transition flex items-center gap-1">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> رفع كتاب
+                        </button>
+                    </div>
+                    <div class="space-y-3" id="booksListContainer">
+                        <!-- Book items -->
+                    </div>
+                </div>
+
+                <!-- Video Lectures (Direct + Links) -->
+                <div class="glass-card p-6 rounded-2xl space-y-4">
+                    <div class="flex justify-between items-center pb-3 border-b border-gold-100">
+                        <h4 class="font-bold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="video" class="w-5 h-5 text-rose-500"></i> المحاضرات وشروحات الفيديو
+                        </h4>
+                        <button onclick="navigateTo('upload')" class="text-xs bg-gold-500 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-gold-600 transition flex items-center gap-1">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> إضافة فيديو
+                        </button>
+                    </div>
+                    <div class="space-y-3" id="videosListContainer">
+                        <!-- Video items -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. AI HUB (NotebookLM, ChatGPT, Claude, Gemini 통합) -->
+        <section id="view-ai-hub" class="view-section hidden space-y-6">
+            <div class="text-center space-y-2">
+                <span class="px-4 py-1.5 rounded-full text-xs font-extrabold bg-gold-100 border border-gold-300 text-gold-700 inline-block shadow-sm">
+                    ⚡ المركز الموحد للذكاء الاصطناعي الأكاديمي
+                </span>
+                <h2 class="text-3xl font-extrabold text-slate-900">
+                    مساعدك الشامل مدمج بنماذج متعددة
+                </h2>
+                <p class="text-slate-500 text-sm max-w-xl mx-auto">
+                    اختر المحرك المناسب لدراستك: تلخيص كتب، حل شيتات، كتابة أكواد، أو تحليل علمي.
+                </p>
+            </div>
+
+            <!-- Model Switcher -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
+                <button onclick="selectAiModel('gemini')" id="btn-gemini" class="model-select-btn p-3 rounded-2xl border border-gold-400 bg-gold-50 flex flex-col items-center text-center gap-2 transition">
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">✨</div>
+                    <div>
+                        <div class="text-xs font-bold text-slate-800">Google Gemini</div>
+                        <div class="text-[10px] text-slate-500">بحث دقيق وتحليل سريع</div>
+                    </div>
+                </button>
+                <button onclick="selectAiModel('notebooklm')" id="btn-notebooklm" class="model-select-btn p-3 rounded-2xl border border-slate-200 bg-white flex flex-col items-center text-center gap-2 transition">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">📓</div>
+                    <div>
+                        <div class="text-xs font-bold text-slate-800">NotebookLM</div>
+                        <div class="text-[10px] text-slate-500">تلخيص الكتب والملازم</div>
+                    </div>
+                </button>
+                <button onclick="selectAiModel('gpt')" id="btn-gpt" class="model-select-btn p-3 rounded-2xl border border-slate-200 bg-white flex flex-col items-center text-center gap-2 transition">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">🟢</div>
+                    <div>
+                        <div class="text-xs font-bold text-slate-800">ChatGPT 4o</div>
+                        <div class="text-[10px] text-slate-500">تفكير منطقي وصياغة</div>
+                    </div>
+                </button>
+                <button onclick="selectAiModel('claude')" id="btn-claude" class="model-select-btn p-3 rounded-2xl border border-slate-200 bg-white flex flex-col items-center text-center gap-2 transition">
+                    <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold">🧠</div>
+                    <div>
+                        <div class="text-xs font-bold text-slate-800">Claude 3.5 Sonnet</div>
+                        <div class="text-[10px] text-slate-500">أكواد وشروحات معقدة</div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="glass-card max-w-4xl mx-auto rounded-3xl p-5 flex flex-col h-[500px]">
+                <div class="flex items-center justify-between pb-3 border-b border-gold-100">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-xs font-bold text-slate-700" id="currentActiveModelLabel">النموذج النشط: Google Gemini</span>
+                    </div>
+                    <button onclick="clearChat()" class="text-xs text-slate-400 hover:text-rose-500 flex items-center gap-1">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> مسح المحادثة
+                    </button>
+                </div>
+
+                <!-- Messages Area -->
+                <div class="flex-grow overflow-y-auto py-4 space-y-4 px-2" id="chatContainer">
+                    <div class="flex gap-3 items-start">
+                        <div class="w-8 h-8 rounded-full bg-gold-500 text-white flex items-center justify-center text-xs font-bold shadow">AI</div>
+                        <div class="bg-white border border-gold-200 p-3.5 rounded-2xl rounded-tr-none text-xs leading-relaxed text-slate-800 shadow-sm max-w-lg">
+                            مرحباً بك في المحرك الأكاديمي الموحد! يمكنك سؤالي عن أي مادة في الكليات، تلخيص ملف PDF، أو شرح مسألة معقدة.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Box -->
+                <div class="pt-3 border-t border-gold-100">
+                    <div class="flex gap-2">
+                        <input type="text" id="aiInput" placeholder="اطرح سؤالك أو الصق مسألة هنا..." class="flex-grow bg-white border border-gold-300 rounded-2xl px-4 py-3 text-xs outline-none focus:border-gold-500 shadow-inner">
+                        <button onclick="sendAiMessage()" class="px-5 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-bold rounded-2xl flex items-center justify-center shadow transition">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. PROFILE VIEW -->
+        <section id="view-profile" class="view-section hidden space-y-6">
+            <div class="max-w-4xl mx-auto glass-card rounded-3xl p-8 border border-gold-200">
+                <div class="flex flex-col sm:flex-row items-center gap-6 pb-8 border-b border-gold-100">
+                    <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-gold-400 to-gold-200 border-4 border-white shadow-xl flex items-center justify-center text-3xl font-extrabold text-gold-900">
+                        🎓
+                    </div>
+                    <div class="text-center sm:text-right space-y-1">
+                        <h2 class="text-2xl font-extrabold text-slate-800" id="profileName">طالب جامعي مسجل</h2>
+                        <p class="text-sm text-gold-700 font-bold" id="profileFaculty">جامعة المستقبل الأهلية</p>
+                        <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full mt-2">الحساب مفعّل نشط</span>
+                    </div>
+                </div>
+
+                <!-- Academic Details Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-6">
+                    <div class="bg-white p-4 rounded-2xl border border-gold-100 shadow-sm">
+                        <span class="text-xs text-slate-400 font-bold">الفرقة الدراسية</span>
+                        <p class="text-sm font-bold text-slate-800 mt-1">الفرقة الأولى (2026)</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-gold-100 shadow-sm">
+                        <span class="text-xs text-slate-400 font-bold">الرقم القومي / الجامعي</span>
+                        <p class="text-sm font-bold text-slate-800 mt-1">30208151700991</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-gold-100 shadow-sm">
+                        <span class="text-xs text-slate-400 font-bold">البريد الجامعي</span>
+                        <p class="text-sm font-bold text-slate-800 mt-1">student@uni.edu.eg</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-gold-100 shadow-sm">
+                        <span class="text-xs text-slate-400 font-bold">الكتب المحملة</span>
+                        <p class="text-sm font-bold text-gold-600 mt-1">14 كتاب دراسي</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-gold-100 shadow-sm">
+                        <span class="text-xs text-slate-400 font-bold">الفيديوهات المحفوظة</span>
+                        <p class="text-sm font-bold text-gold-600 mt-1">28 محاضرة فيديو</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-gold-100 shadow-sm">
+                        <span class="text-xs text-slate-400 font-bold">ساعات التفاعل بالذكاء الاصطناعي</span>
+                        <p class="text-sm font-bold text-gold-600 mt-1">42 ساعة استذكار</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. UPLOAD MATERIAL MODAL / VIEW -->
+        <section id="view-upload" class="view-section hidden space-y-6">
+            <div class="max-w-2xl mx-auto glass-card rounded-3xl p-8 border border-gold-200">
+                <h3 class="text-2xl font-extrabold text-slate-800 flex items-center gap-2 mb-2">
+                    <i data-lucide="upload-cloud" class="w-6 h-6 text-gold-600"></i>
+                    رفع وتوثيق محتوى دراسي جديد
+                </h3>
+                <p class="text-slate-500 text-xs mb-6">أضف كتاباً بصيغة PDF أو محاضرة مرئية (رفع مباشر أو عبر رابط YouTube/Drive)</p>
+
+                <form id="uploadForm" onsubmit="handleUploadSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">الكلية التابع لها المحتوى</label>
+                        <select id="uploadFacultySelect" class="w-full bg-white border border-gold-300 rounded-xl p-3 text-xs outline-none focus:border-gold-500">
+                            <!-- Injected dynamically -->
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">عنوان المادة / المحاضرة</label>
+                        <input type="text" id="uploadTitle" required placeholder="مثال: مقدمة في علوم البيانات - الفصل الثاني" class="w-full bg-white border border-gold-300 rounded-xl p-3 text-xs outline-none focus:border-gold-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">نوع المحتوى</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex items-center gap-2 p-3 bg-white border border-gold-200 rounded-xl cursor-pointer hover:bg-gold-50">
+                                <input type="radio" name="uploadType" value="book" checked onclick="toggleUploadInput('book')">
+                                <span class="text-xs font-bold text-slate-700">كتاب / ملزمة (PDF)</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-3 bg-white border border-gold-200 rounded-xl cursor-pointer hover:bg-gold-50">
+                                <input type="radio" name="uploadType" value="video" onclick="toggleUploadInput('video')">
+                                <span class="text-xs font-bold text-slate-700">شرح فيديو</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Book Specific Input -->
+                    <div id="bookUploadSection" class="p-4 border-2 border-dashed border-gold-300 rounded-2xl bg-gold-50/50 text-center">
+                        <i data-lucide="file-text" class="w-8 h-8 text-gold-500 mx-auto mb-2"></i>
+                        <input type="file" id="bookFile" accept=".pdf,.doc,.docx" class="text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gold-500 file:text-white hover:file:bg-gold-600">
+                        <p class="text-[10px] text-slate-400 mt-2">يدعم PDF, DOCX بحد أقصى 50MB</p>
+                    </div>
+
+                    <!-- Video Specific Input -->
+                    <div id="videoUploadSection" class="hidden space-y-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">رابط الفيديو (YouTube / Drive)</label>
+                            <input type="url" id="videoLink" placeholder="https://youtube.com/watch?v=..." class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs outline-none">
+                        </div>
+                        <div class="text-center text-xs text-slate-400 font-bold">أو</div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">رفع ملف الفيديو مباشرة</label>
+                            <input type="file" id="videoDirectFile" accept="video/*" class="text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-700 file:text-white">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-gold-500 hover:bg-gold-600 text-white font-bold rounded-xl shadow-md transition text-xs flex items-center justify-center gap-2">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i> حفظ ونشر في الكلية
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Mobile & Quick Navigation Bar (4 Main Icons) -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gold-200 shadow-lg">
+        <div class="max-w-md mx-auto grid grid-cols-4 h-16">
+            <button onclick="navigateTo('home')" id="nav-btn-home" class="bottom-nav-item flex flex-col items-center justify-center gap-1 text-gold-600 font-bold">
+                <i data-lucide="grid" class="w-5 h-5"></i>
+                <span class="text-[11px]">الكليات</span>
+            </button>
+            <button onclick="navigateTo('ai-hub')" id="nav-btn-ai-hub" class="bottom-nav-item flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-gold-600 font-bold">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+                <span class="text-[11px]">الذكاء الاصطناعي</span>
+            </button>
+            <button onclick="navigateTo('upload')" id="nav-btn-upload" class="bottom-nav-item flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-gold-600 font-bold">
+                <i data-lucide="folder-up" class="w-5 h-5"></i>
+                <span class="text-[11px]">رفع المواد</span>
+            </button>
+            <button onclick="navigateTo('profile')" id="nav-btn-profile" class="bottom-nav-item flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-gold-600 font-bold">
+                <i data-lucide="user" class="w-5 h-5"></i>
+                <span class="text-[11px]">البروفايل</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Application Script Data & Logic -->
+    <script>
+        // Exact Faculties Data from University Structure
+        const facultiesData = [
+            {
+                id: 'pharmacy',
+                name: 'كلية الصيدلة',
+                badge: 'القطاع الطبي',
+                icon: 'pill',
+                themeBg: 'from-emerald-50 via-white to-teal-50',
+                accentColor: 'text-emerald-700',
+                borderColor: 'border-emerald-200',
+                animSvg: '🧪 💊 🧬',
+                desc: 'برامج الصيدلة الإكلينيكية وصناعة الدواء الحديثة وفق أعلى معايير الجودة الصحية.',
+                programs: [
+                    'Pharm D (الصيدلة الإكلينيكية)',
+                    'Pharm D (فارم دي)'
+                ],
+                books: [
+                    { title: 'علم الأدوية الإكلينيكي Clinical Pharmacology', author: 'د. منى الشريف', size: '14 MB' },
+                    { title: 'الكيمياء الصيدلية وتصميم الدواء', author: 'د. سامح رضوان', size: '19 MB' }
+                ],
+                videos: [
+                    { title: 'شرح آليات عمل المضادات الحيوية', source: 'محاضرة فيديو مرفوعة مباشرة', duration: '45 دقيقة' },
+                    { title: 'فارماكولوجي - الجهاز العصبي', source: 'رابط خارجي (YouTube)', duration: '1 ساعة 15 دقيقة' }
+                ]
+            },
+            {
+                id: 'cs-ai',
+                name: 'كلية الحاسبات والمعلومات والذكاء الاصطناعي',
+                badge: 'القطاع التكنولوجي',
+                icon: 'cpu',
+                themeBg: 'from-cyan-50 via-white to-blue-50',
+                accentColor: 'text-cyan-700',
+                borderColor: 'border-cyan-200',
+                animSvg: '💻 ⚡ 🤖',
+                desc: 'تطوير النظم الذكية، البيانات الضخمة، وهندسة البرمجيات السحابية المتطورة.',
+                programs: [
+                    'الذكاء الاصطناعي والبيانات الضخمة',
+                    'الشبكات والحوسبة السحابية'
+                ],
+                books: [
+                    { title: 'أسس الذكاء الاصطناعي وتعلم الآلة', author: 'د. حازم أحمد', size: '24 MB' },
+                    { title: 'معمارية السحابة وأمن الشبكات', author: 'د. يوسف إبراهيم', size: '18 MB' }
+                ],
+                videos: [
+                    { title: 'بناء النماذج اللغوية العميقة بالبايثون', source: 'محاضرة فيديو مرفوعة مباشرة', duration: '50 دقيقة' },
+                    { title: 'تأمين الشبكات اللاسلكية Cloud Security', source: 'رابط خارجي (YouTube)', duration: '1 ساعة 10 دقيقة' }
+                ]
+            },
+            {
+                id: 'vet',
+                name: 'كلية الطب البيطري',
+                badge: 'القطاع الطبي والبيولوجي',
+                icon: 'activity',
+                themeBg: 'from-lime-50 via-white to-emerald-50',
+                accentColor: 'text-lime-700',
+                borderColor: 'border-lime-200',
+                animSvg: '🐾 🩺 🔬',
+                desc: 'صحة ورعاية الحيوان، معايير سلامة وصحة الغذاء، والتشخيص المخبري المتقدم.',
+                programs: [
+                    'الطب البيطري',
+                    'الطب البيطري تميز صحة وسلامة الغذاء'
+                ],
+                books: [
+                    { title: 'التشريح المقارن ووظائف الأعضاء', author: 'د. إبراهيم فؤاد', size: '32 MB' },
+                    { title: 'سلامة الأغذية والصحة العامة البيطرية', author: 'د. أميرة كامل', size: '15 MB' }
+                ],
+                videos: [
+                    { title: 'الفحص الميكروسكوبي لعينات الأغذية', source: 'محاضرة فيديو مرفوعة مباشرة', duration: '35 دقيقة' }
+                ]
+            },
+            {
+                id: 'science',
+                name: 'كلية العلوم',
+                badge: 'القطاع العلمي الأساسي',
+                icon: 'flask-conical',
+                themeBg: 'from-purple-50 via-white to-indigo-50',
+                accentColor: 'text-purple-700',
+                borderColor: 'border-purple-200',
+                animSvg: '⚛️ 🧪 🔭',
+                desc: 'العلوم التجريبية التطبيقية، الكيمياء الصناعية، وعلوم البيانات المتقدمة.',
+                programs: [
+                    'الكيمياء الصناعية التطبيقية',
+                    'علوم البيانات وتطبيقات الذكاء الاصطناعي'
+                ],
+                books: [
+                    { title: 'الكيمياء العضوية الصناعية التطبيقية', author: 'د. محمود صقر', size: '22 MB' },
+                    { title: 'التحليل الإحصائي للبيانات الضخمة', author: 'د. خالد توفيق', size: '16 MB' }
+                ],
+                videos: [
+                    { title: 'تجارب تفاعلات البلمرة في المعامل', source: 'محاضرة فيديو مرفوعة مباشرة', duration: '40 دقيقة' }
+                ]
+            },
+            {
+                id: 'business',
+                name: 'كلية الأعمال',
+                badge: 'القطاع المالي والإداري',
+                icon: 'trending-up',
+                themeBg: 'from-amber-50 via-white to-yellow-50',
+                accentColor: 'text-amber-700',
+                borderColor: 'border-amber-200',
+                animSvg: '📊 💼 📈',
+                desc: 'إدارة الأعمال الحديثة، التحول الرقمي المحاسبي، والتسويق الإلكتروني الدولي.',
+                programs: [
+                    'نظم معلومات الأعمال (BIS)',
+                    'المحاسبة الرقمية',
+                    'التسويق الرقمي'
+                ],
+                books: [
+                    { title: 'نظم تخطيط موارد المؤسسات ERP', author: 'د. عادل حسني', size: '12 MB' },
+                    { title: 'استراتيجيات التسويق الرقمي الحديث', author: 'د. سارة محمود', size: '20 MB' }
+                ],
+                videos: [
+                    { title: 'تحليل القوائم المالية باستخدام Excel & PowerBI', source: 'رابط خارجي (YouTube)', duration: '1 ساعة' }
+                ]
+            },
+            {
+                id: 'tourism',
+                name: 'كلية السياحة والفنادق',
+                badge: 'قطاع الضيافة الدولي',
+                icon: 'plane',
+                themeBg: 'from-sky-50 via-white to-blue-50',
+                accentColor: 'text-sky-700',
+                borderColor: 'border-sky-200',
+                animSvg: '✈️ 🏨 🗺️',
+                desc: 'إدارة شركات الطيران العالمية وعمليات الفنادق والمطاعم الدولية.',
+                programs: [
+                    'إدارة الطيران',
+                    'الإدارة الدولية لعمليات الفنادق والمطاعم'
+                ],
+                books: [
+                    { title: 'إدارة عمليات الطيران وخدمات الركاب', author: 'ك. أشرف متولي', size: '17 MB' },
+                    { title: 'معايير الضيافة والفندقة العالمية', author: 'د. نادية عبدالحميد', size: '13 MB' }
+                ],
+                videos: [
+                    { title: 'نظام حجز تذاكر الطيران Amadeus العملي', source: 'محاضرة فيديو مرفوعة مباشرة', duration: '55 دقيقة' }
+                ]
+            },
+            {
+                id: 'sports',
+                name: 'كلية علوم الرياضة',
+                badge: 'القطاع البدني والتأهيلي',
+                icon: 'trophy',
+                themeBg: 'from-orange-50 via-white to-rose-50',
+                accentColor: 'text-orange-700',
+                borderColor: 'border-orange-200',
+                animSvg: '🏃 🏋️ ⏱️',
+                desc: 'تخطيط الأحمال، الاستشفاء والتأهيل الحركي، وتحليل الأداء الرياضي الرقمي.',
+                programs: [
+                    'تخطيط الأحمال التدريبية',
+                    'الاستشفاء والتأهيل البدني والحركي',
+                    'إدارة الأعمال الرياضية',
+                    'تحليل البيانات الرياضية',
+                    'الترويح وأنشطة جودة الحياة'
+                ],
+                books: [
+                    { title: 'فسيولوجيا الجهد البدني وتخطيط الأحمال', author: 'د. وائل ربيع', size: '28 MB' },
+                    { title: 'التأهيل الحركي وإصابات الملاعب', author: 'د. حسام غالي', size: '21 MB' }
+                ],
+                videos: [
+                    { title: 'تمارين الاستشفاء العضلي المتقدمة', source: 'محاضرة فيديو مرفوعة مباشرة', duration: '30 دقيقة' }
+                ]
+            }
+        ];
+
+        let currentActiveModel = 'Google Gemini';
+
+        // Render Home Grid
+        function renderFaculties() {
+            const container = document.getElementById('facultiesGrid');
+            const selectContainer = document.getElementById('uploadFacultySelect');
+            container.innerHTML = '';
+            selectContainer.innerHTML = '';
+
+            facultiesData.forEach(fac => {
+                // Populate upload select
+                const opt = document.createElement('option');
+                opt.value = fac.id;
+                opt.textContent = fac.name;
+                selectContainer.appendChild(opt);
+
+                // Create Card
+                const card = document.createElement('div');
+                card.className = `faculty-card bg-gradient-to-br ${fac.themeBg} p-6 rounded-3xl border ${fac.borderColor} shadow-sm cursor-pointer relative overflow-hidden flex flex-col justify-between`;
+                card.onclick = () => openFaculty(fac.id);
+
+                card.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <div class="w-12 h-12 rounded-2xl bg-white shadow-md border border-gold-300 flex items-center justify-center text-gold-600">
+                                <i data-lucide="${fac.icon}" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-[11px] font-bold px-3 py-1 bg-white/80 border border-gold-200 rounded-full ${fac.accentColor}">${fac.badge}</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-extrabold text-slate-800">${fac.name}</h3>
+                            <p class="text-xs text-slate-500 mt-2 line-clamp-2">${fac.desc}</p>
+                        </div>
+                        <div class="pt-2 flex flex-wrap gap-1.5">
+                            ${fac.programs.slice(0, 2).map(p => `<span class="text-[10px] bg-white/90 px-2 py-0.5 rounded-md border border-gold-100 text-slate-600 font-semibold">${p}</span>`).join('')}
+                            ${fac.programs.length > 2 ? `<span class="text-[10px] bg-gold-100 px-2 py-0.5 rounded-md text-gold-800 font-bold">+${fac.programs.length - 2} المزيد</span>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-xs font-bold text-gold-700 flex items-center gap-1">دخول الكلية <i data-lucide="chevron-left" class="w-4 h-4"></i></span>
+                        <div class="text-lg animate-float opacity-80">${fac.animSvg}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Open Individual Faculty
+        function openFaculty(id) {
+            const faculty = facultiesData.find(f => f.id === id);
+            if (!faculty) return;
+
+            document.getElementById('facultyTag').textContent = faculty.badge;
+            document.getElementById('facultyHeroTitle').textContent = faculty.name;
+            document.getElementById('facultyHeroDesc').textContent = faculty.desc;
+            document.getElementById('facultyHero').className = `p-8 rounded-3xl relative overflow-hidden transition-all duration-500 bg-gradient-to-r ${faculty.themeBg} border ${faculty.borderColor} shadow-sm`;
+            document.getElementById('facultyHeroIcon').innerHTML = `<i data-lucide="${faculty.icon}" class="w-8 h-8 text-gold-600"></i>`;
+
+            // Programs
+            const progContainer = document.getElementById('facultyPrograms');
+            progContainer.innerHTML = faculty.programs.map(prog => `
+                <div class="bg-white p-3.5 rounded-2xl border border-gold-200 flex items-center gap-3 shadow-xs">
+                    <div class="w-2 h-2 rounded-full bg-gold-500"></div>
+                    <span class="text-xs font-bold text-slate-800">${prog}</span>
+                </div>
+            `).join('');
+
+            // Books
+            const booksContainer = document.getElementById('booksListContainer');
+            booksContainer.innerHTML = faculty.books.map(b => `
+                <div class="p-3.5 bg-white rounded-xl border border-gold-100 flex items-center justify-between hover:border-gold-300 transition">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-gold-50 rounded-lg text-gold-600"><i data-lucide="file" class="w-4 h-4"></i></div>
+                        <div>
+                            <div class="text-xs font-bold text-slate-800">${b.title}</div>
+                            <div class="text-[10px] text-slate-400">إعداد: ${b.author} • ${b.size}</div>
+                        </div>
+                    </div>
+                    <button class="p-2 text-gold-600 hover:bg-gold-50 rounded-lg transition" title="تحميل"><i data-lucide="download" class="w-4 h-4"></i></button>
+                </div>
+            `).join('');
+
+            // Videos
+            const videosContainer = document.getElementById('videosListContainer');
+            videosContainer.innerHTML = faculty.videos.map(v => `
+                <div class="p-3.5 bg-white rounded-xl border border-gold-100 flex items-center justify-between hover:border-gold-300 transition">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-rose-50 rounded-lg text-rose-600"><i data-lucide="play-circle" class="w-4 h-4"></i></div>
+                        <div>
+                            <div class="text-xs font-bold text-slate-800">${v.title}</div>
+                            <div class="text-[10px] text-slate-400">${v.source} • المدة: ${v.duration}</div>
+                        </div>
+                    </div>
+                    <button class="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-gold-600 transition">مشاهدة</button>
+                </div>
+            `).join('');
+
+            navigateTo('faculty');
+            lucide.createIcons();
+        }
+
+        // Navigation Controller
+        function navigateTo(viewId) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) target.classList.remove('hidden');
+
+            // Bottom nav indicators
+            document.querySelectorAll('.bottom-nav-item').forEach(btn => {
+                btn.classList.remove('text-gold-600');
+                btn.classList.add('text-slate-400');
+            });
+            const activeBtn = document.getElementById(`nav-btn-${viewId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('text-gold-600');
+                activeBtn.classList.remove('text-slate-400');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            lucide.createIcons();
+        }
+
+        function toggleSideMenu() {
+            const menu = document.getElementById('sideMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // AI Model Selection
+        function selectAiModel(model) {
+            const map = {
+                'gemini': 'Google Gemini',
+                'notebooklm': 'NotebookLM (تحليل المراجع)',
+                'gpt': 'ChatGPT 4o (المنطق)',
+                'claude': 'Claude 3.5 (الأكواد والتحليل)'
+            };
+            currentActiveModel = map[model];
+            document.getElementById('currentActiveModelLabel').textContent = `النموذج النشط: ${currentActiveModel}`;
+
+            document.querySelectorAll('.model-select-btn').forEach(btn => {
+                btn.classList.remove('border-gold-400', 'bg-gold-50');
+                btn.classList.add('border-slate-200', 'bg-white');
+            });
+            document.getElementById(`btn-${model}`).classList.add('border-gold-400', 'bg-gold-50');
+            document.getElementById(`btn-${model}`).classList.remove('border-slate-200', 'bg-white');
+        }
+
+        function sendAiMessage() {
+            const input = document.getElementById('aiInput');
+            const val = input.value.trim();
+            if (!val) return;
+
+            const chat = document.getElementById('chatContainer');
+            // User message
+            chat.innerHTML += `
+                <div class="flex gap-3 items-start justify-end">
+                    <div class="bg-gradient-to-r from-gold-500 to-gold-600 text-white p-3.5 rounded-2xl rounded-tl-none text-xs leading-relaxed max-w-lg shadow-sm">
+                        ${val}
+                    </div>
+                </div>
+            `;
+            input.value = '';
+
+            // AI Simulated Reply based on Model
+            setTimeout(() => {
+                chat.innerHTML += `
+                    <div class="flex gap-3 items-start">
+                        <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center text-[10px] font-bold shadow">AI</div>
+                        <div class="bg-white border border-gold-200 p-3.5 rounded-2xl rounded-tr-none text-xs leading-relaxed text-slate-800 shadow-sm max-w-lg">
+                            <span class="font-bold text-gold-700 block mb-1">إجابة بواسطة [${currentActiveModel}]:</span>
+                            تم استلام استفسارك وتحليله وفق المناهج المعتمدة. يمكنك مراجعة شروحات الفيديو والكتب التخصصية في قسم الكلية لمزيد من التفاصيل!
+                        </div>
+                    </div>
+                `;
+                chat.scrollTop = chat.scrollHeight;
+            }, 600);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function clearChat() {
+            document.getElementById('chatContainer').innerHTML = `
+                <div class="flex gap-3 items-start">
+                    <div class="w-8 h-8 rounded-full bg-gold-500 text-white flex items-center justify-center text-xs font-bold shadow">AI</div>
+                    <div class="bg-white border border-gold-200 p-3.5 rounded-2xl rounded-tr-none text-xs leading-relaxed text-slate-800 shadow-sm max-w-lg">
+                        تمت إعادة تهيئة المحادثة. يمكنك الآن طرح أسئلة جديدة.
+                    </div>
+                </div>
+            `;
+        }
+
+        // Upload Handlers
+        function toggleUploadInput(type) {
+            if (type === 'book') {
+                document.getElementById('bookUploadSection').classList.remove('hidden');
+                document.getElementById('videoUploadSection').classList.add('hidden');
+            } else {
+                document.getElementById('bookUploadSection').classList.add('hidden');
+                document.getElementById('videoUploadSection').classList.remove('hidden');
+            }
+        }
+
+        function handleUploadSubmit(e) {
+            e.preventDefault();
+            const facId = document.getElementById('uploadFacultySelect').value;
+            const title = document.getElementById('uploadTitle').value;
+            const type = document.querySelector('input[name="uploadType"]:checked').value;
+            const fac = facultiesData.find(f => f.id === facId);
+
+            if (fac) {
+                if (type === 'book') {
+                    fac.books.unshift({ title: title, author: 'طالب / عضو هيئة تدريس', size: '10 MB' });
+                } else {
+                    fac.videos.unshift({ title: title, source: 'محاضرة مضافة حديثاً', duration: 'متاح للمشاهدة' });
+                }
+                alert('تم الرفع والحفظ بنجاح داخل الكلية!');
+                document.getElementById('uploadForm').reset();
+                openFaculty(facId);
+            }
+        }
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            renderFaculties();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
