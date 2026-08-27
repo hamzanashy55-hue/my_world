@@ -1,0 +1,3049 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUSC - المنصة التعليمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4A853;
+            --gold-light: #F0D78C;
+            --gold-dark: #B8922E;
+            --white: #FFFFFF;
+            --off-white: #FAFAF7;
+            --light-cream: #FFF8E7;
+            --light-gray: #F5F5F5;
+            --text-dark: #2C2C2C;
+            --text-light: #666;
+            --shadow: 0 4px 20px rgba(212, 168, 83, 0.15);
+            --shadow-lg: 0 10px 40px rgba(212, 168, 83, 0.2);
+
+            /* Faculty Colors - Light versions */
+            --science-primary: #E8F5E9;
+            --science-secondary: #66BB6A;
+            --science-accent: #43A047;
+
+            --pharmacy-primary: #E3F2FD;
+            --pharmacy-secondary: #42A5F5;
+            --pharmacy-accent: #1E88E5;
+
+            --engineering-primary: #FFF3E0;
+            --engineering-secondary: #FFA726;
+            --engineering-accent: #FB8C00;
+
+            --medicine-primary: #FCE4EC;
+            --medicine-secondary: #EF5350;
+            --medicine-accent: #E53935;
+
+            --arts-primary: #F3E5F5;
+            --arts-secondary: #AB47BC;
+            --arts-accent: #8E24AA;
+
+            --commerce-primary: #E0F2F1;
+            --commerce-secondary: #26A69A;
+            --commerce-accent: #00897B;
+
+            --law-primary: #EFEBE9;
+            --law-secondary: #8D6E63;
+            --law-accent: #6D4C41;
+
+            --cs-primary: #E8EAF6;
+            --cs-secondary: #5C6BC0;
+            --cs-accent: #3949AB;
+
+            --nursing-primary: #FFF8E1;
+            --nursing-secondary: #FFB300;
+            --nursing-accent: #FFA000;
+
+            --education-primary: #E1F5FE;
+            --education-secondary: #29B6F6;
+            --education-accent: #039BE5;
+
+            --dentistry-primary: #F1F8E9;
+            --dentistry-secondary: #9CCC65;
+            --dentistry-accent: #7CB342;
+
+            --agriculture-primary: #E8F5E9;
+            --agriculture-secondary: #81C784;
+            --agriculture-accent: #66BB6A;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--off-white);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ============ LOADING SCREEN ============ */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-cream) 100%);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 30px;
+            animation: logoFloat 2s ease-in-out infinite;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: var(--light-gray);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+            border-radius: 2px;
+            animation: loadBar 2s ease-in-out forwards;
+        }
+
+        @keyframes loadBar {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* ============ APP CONTAINER ============ */
+        .app-container {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: var(--white);
+            position: relative;
+            box-shadow: 0 0 60px rgba(0,0,0,0.08);
+        }
+
+        /* ============ TOP HEADER ============ */
+        .top-header {
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-cream) 100%);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(212, 168, 83, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: none;
+            background: var(--white);
+            color: var(--gold);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .menu-btn {
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: #EF5350;
+            border-radius: 50%;
+            border: 2px solid var(--white);
+        }
+
+        /* ============ SIDE MENU ============ */
+        .side-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .side-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 300px;
+            height: 100%;
+            background: var(--white);
+            z-index: 201;
+            transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow-y: auto;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+        }
+
+        .side-menu.active {
+            right: 0;
+        }
+
+        .side-menu-header {
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            text-align: center;
+        }
+
+        .side-menu-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--white);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .side-menu-name {
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .side-menu-email {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.8rem;
+            margin-top: 3px;
+        }
+
+        .side-menu-items {
+            padding: 15px 0;
+        }
+
+        .side-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: right;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .side-menu-item:hover {
+            background: var(--light-cream);
+            color: var(--gold);
+        }
+
+        .side-menu-item i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--gold);
+        }
+
+        .side-menu-divider {
+            height: 1px;
+            background: var(--light-gray);
+            margin: 10px 20px;
+        }
+
+        /* ============ MAIN CONTENT PAGES ============ */
+        .page {
+            display: none;
+            padding-bottom: 80px;
+            min-height: calc(100vh - 70px);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============ HOME PAGE ============ */
+        .welcome-section {
+            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--light-cream) 0%, var(--white) 100%);
+        }
+
+        .welcome-greeting {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .welcome-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-top: 3px;
+        }
+
+        .welcome-name span {
+            color: var(--gold);
+        }
+
+        .search-box {
+            margin: 15px 20px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px 14px 45px;
+            border: 2px solid var(--light-gray);
+            border-radius: 15px;
+            font-size: 0.95rem;
+            font-family: 'Tajawal', sans-serif;
+            background: var(--white);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(212, 168, 83, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 10px 20px 20px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+            border: 1px solid rgba(212, 168, 83, 0.1);
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--light-cream);
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
+
+        .stat-number {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        /* Section Title */
+        .section-title {
+            padding: 20px 20px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-title h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .section-title a {
+            font-size: 0.8rem;
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ============ FACULTIES GRID ============ */
+        .faculties-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 10px 20px 20px;
+        }
+
+        .faculty-card {
+            border-radius: 20px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.04);
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .faculty-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            opacity: 0.1;
+            transition: all 0.6s ease;
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .faculty-card:hover::before {
+            transform: scale(2);
+        }
+
+        .faculty-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .faculty-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+            color: var(--text-dark);
+        }
+
+        .faculty-count {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Faculty specific styles */
+        .faculty-science { background: linear-gradient(145deg, var(--science-primary) 0%, #C8E6C9 100%); }
+        .faculty-science .faculty-icon { background: var(--science-secondary); color: white; }
+        .faculty-science::before { background: var(--science-secondary); }
+
+        .faculty-pharmacy { background: linear-gradient(145deg, var(--pharmacy-primary) 0%, #BBDEFB 100%); }
+        .faculty-pharmacy .faculty-icon { background: var(--pharmacy-secondary); color: white; }
+        .faculty-pharmacy::before { background: var(--pharmacy-secondary); }
+
+        .faculty-engineering { background: linear-gradient(145deg, var(--engineering-primary) 0%, #FFE0B2 100%); }
+        .faculty-engineering .faculty-icon { background: var(--engineering-secondary); color: white; }
+        .faculty-engineering::before { background: var(--engineering-secondary); }
+
+        .faculty-medicine { background: linear-gradient(145deg, var(--medicine-primary) 0%, #F8BBD0 100%); }
+        .faculty-medicine .faculty-icon { background: var(--medicine-secondary); color: white; }
+        .faculty-medicine::before { background: var(--medicine-secondary); }
+
+        .faculty-arts { background: linear-gradient(145deg, var(--arts-primary) 0%, #E1BEE7 100%); }
+        .faculty-arts .faculty-icon { background: var(--arts-secondary); color: white; }
+        .faculty-arts::before { background: var(--arts-secondary); }
+
+        .faculty-commerce { background: linear-gradient(145deg, var(--commerce-primary) 0%, #B2DFDB 100%); }
+        .faculty-commerce .faculty-icon { background: var(--commerce-secondary); color: white; }
+        .faculty-commerce::before { background: var(--commerce-secondary); }
+
+        .faculty-law { background: linear-gradient(145deg, var(--law-primary) 0%, #D7CCC8 100%); }
+        .faculty-law .faculty-icon { background: var(--law-secondary); color: white; }
+        .faculty-law::before { background: var(--law-secondary); }
+
+        .faculty-cs { background: linear-gradient(145deg, var(--cs-primary) 0%, #C5CAE9 100%); }
+        .faculty-cs .faculty-icon { background: var(--cs-secondary); color: white; }
+        .faculty-cs::before { background: var(--cs-secondary); }
+
+        .faculty-nursing { background: linear-gradient(145deg, var(--nursing-primary) 0%, #FFECB3 100%); }
+        .faculty-nursing .faculty-icon { background: var(--nursing-secondary); color: white; }
+        .faculty-nursing::before { background: var(--nursing-secondary); }
+
+        .faculty-education { background: linear-gradient(145deg, var(--education-primary) 0%, #B3E5FC 100%); }
+        .faculty-education .faculty-icon { background: var(--education-secondary); color: white; }
+        .faculty-education::before { background: var(--education-secondary); }
+
+        .faculty-dentistry { background: linear-gradient(145deg, var(--dentistry-primary) 0%, #DCEDC8 100%); }
+        .faculty-dentistry .faculty-icon { background: var(--dentistry-secondary); color: white; }
+        .faculty-dentistry::before { background: var(--dentistry-secondary); }
+
+        .faculty-agriculture { background: linear-gradient(145deg, #E8F5E9 0%, #C8E6C9 100%); }
+        .faculty-agriculture .faculty-icon { background: var(--agriculture-secondary); color: white; }
+        .faculty-agriculture::before { background: var(--agriculture-secondary); }
+
+        /* ============ FACULTY DETAIL PAGE ============ */
+        .faculty-detail-page {
+            display: none;
+            min-height: 100vh;
+            animation: slideIn 0.5s ease;
+        }
+
+        .faculty-detail-page.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .faculty-hero {
+            padding: 30px 20px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .faculty-hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: floatParticle 6s ease-in-out infinite;
+        }
+
+        @keyframes floatParticle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        .faculty-hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .faculty-hero-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            cursor: pointer;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.7);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .faculty-hero-back:hover {
+            background: rgba(255,255,255,0.9);
+        }
+
+        .faculty-hero-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: white;
+            margin-bottom: 15px;
+            animation: iconBounce 3s ease-in-out infinite;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.05); }
+        }
+
+        .faculty-hero-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .faculty-hero-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Animated Elements for each faculty */
+        .faculty-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* Science animations - atoms, molecules */
+        .atom-orbit {
+            position: absolute;
+            border: 2px dashed rgba(102, 187, 106, 0.2);
+            border-radius: 50%;
+            animation: spin 8s linear infinite;
+        }
+
+        .atom-electron {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--science-secondary);
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+
+        /* Pharmacy animations - pills, capsules */
+        .pill {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            border-radius: 5px;
+            opacity: 0.2;
+            animation: floatPill 5s ease-in-out infinite;
+        }
+
+        @keyframes floatPill {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(180deg); }
+        }
+
+        /* DNA helix for medicine */
+        .dna-strand {
+            position: absolute;
+            width: 4px;
+            height: 15px;
+            border-radius: 2px;
+            opacity: 0.2;
+            animation: dnaFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes dnaFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(360deg); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Faculty Tabs */
+        .faculty-tabs {
+            display: flex;
+            padding: 0 20px;
+            gap: 5px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .faculty-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .faculty-tab {
+            padding: 10px 18px;
+            border-radius: 12px;
+            border: none;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            background: var(--light-gray);
+            color: var(--text-light);
+        }
+
+        .faculty-tab.active {
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Material Cards */
+        .material-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+            border: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .material-card:hover {
+            transform: translateX(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .material-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .material-icon.pdf { background: #FFEBEE; color: #E53935; }
+        .material-icon.video { background: #E3F2FD; color: #1E88E5; }
+        .material-icon.link { background: #E8F5E9; color: #43A047; }
+        .material-icon.doc { background: #FFF3E0; color: #FB8C00; }
+
+        .material-info {
+            flex: 1;
+        }
+
+        .material-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 3px;
+        }
+
+        .material-meta {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .material-action {
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            border: none;
+            background: var(--light-cream);
+            color: var(--gold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .material-action:hover {
+            background: var(--gold);
+            color: white;
+        }
+
+        /* Upload Section */
+        .upload-area {
+            border: 2px dashed var(--gold-light);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: var(--light-cream);
+        }
+
+        .upload-area:hover {
+            border-color: var(--gold);
+            background: #FFF8E7;
+        }
+
+        .upload-area i {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .upload-area h4 {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .upload-area p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .upload-form {
+            margin-top: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(212, 168, 83, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: white;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 168, 83, 0.3);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--gold);
+            border-radius: 14px;
+            background: transparent;
+            color: var(--gold);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-cream);
+        }
+
+        /* ============ AI PAGE ============ */
+        .ai-header {
+            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--light-cream) 0%, #F5F0FF 100%);
+            text-align: center;
+        }
+
+        .ai-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, var(--gold) 0%, #FF6B6B 50%, #5C6BC0 100%);
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            animation: aiPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes aiPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 168, 83, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(212, 168, 83, 0); }
+        }
+
+        .ai-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .ai-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 3px;
+        }
+
+        .ai-models {
+            display: flex;
+            gap: 8px;
+            padding: 15px 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .ai-models::-webkit-scrollbar { display: none; }
+
+        .ai-model-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--light-gray);
+            background: var(--white);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ai-model-chip.active {
+            border-color: var(--gold);
+            background: var(--light-cream);
+            color: var(--gold-dark);
+        }
+
+        .ai-model-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-gpt { background: #10A37F; }
+        .dot-claude { background: #CC785C; }
+        .dot-gemini { background: #4285F4; }
+        .dot-notebook { background: #FBBC04; }
+        .dot-all { background: linear-gradient(135deg, #10A37F, #CC785C, #4285F4, #FBBC04); }
+
+        .ai-chat {
+            padding: 15px 20px;
+            min-height: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .ai-message {
+            margin-bottom: 15px;
+            animation: msgIn 0.3s ease;
+        }
+
+        @keyframes msgIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-message.user {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .ai-message.user .msg-bubble {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+        }
+
+        .ai-message.bot .msg-bubble {
+            background: var(--light-gray);
+            color: var(--text-dark);
+            border-radius: 18px 18px 18px 4px;
+        }
+
+        .msg-bubble {
+            max-width: 80%;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .msg-model-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        .ai-input-area {
+            padding: 15px 20px;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: var(--white);
+        }
+
+        .ai-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--light-gray);
+            border-radius: 14px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .ai-input:focus {
+            border-color: var(--gold);
+        }
+
+        .ai-send-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .ai-send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(212, 168, 83, 0.3);
+        }
+
+        .ai-suggestions {
+            padding: 10px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .ai-suggestion {
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--light-gray);
+            background: var(--white);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-light);
+        }
+
+        .ai-suggestion:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: var(--light-cream);
+        }
+
+        /* ============ BOOKS PAGE ============ */
+        .books-header {
+            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--light-cream) 0%, #E8F5E9 100%);
+        }
+
+        .books-filter {
+            display: flex;
+            gap: 8px;
+            padding: 10px 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .books-filter::-webkit-scrollbar { display: none; }
+
+        .filter-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--light-gray);
+            background: var(--white);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .filter-chip.active {
+            background: var(--gold);
+            color: white;
+            border-color: var(--gold);
+        }
+
+        .book-card {
+            background: var(--white);
+            border-radius: 18px;
+            margin: 10px 20px;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+            border: 1px solid var(--light-gray);
+            transition: all 0.3s ease;
+        }
+
+        .book-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .book-cover {
+            width: 80px;
+            height: 110px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .book-info {
+            flex: 1;
+        }
+
+        .book-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .book-author {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .book-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .book-tag {
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .book-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .book-action-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        /* ============ PROFILE PAGE ============ */
+        .profile-header {
+            padding: 30px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--light-cream) 0%, var(--white) 100%);
+        }
+
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(212, 168, 83, 0.3);
+            position: relative;
+        }
+
+        .profile-avatar-edit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--white);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .profile-faculty {
+            font-size: 0.85rem;
+            color: var(--gold);
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .profile-stat {
+            text-align: center;
+        }
+
+        .profile-stat-num {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .profile-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        .profile-section {
+            padding: 20px;
+        }
+
+        .profile-section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-section-title i {
+            color: var(--gold);
+        }
+
+        .profile-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px;
+            background: var(--light-gray);
+            border-radius: 14px;
+            margin-bottom: 10px;
+        }
+
+        .profile-item-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
+
+        .profile-item-info {
+            flex: 1;
+        }
+
+        .profile-item-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .profile-item-value {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* ============ BOTTOM NAV ============ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 430px;
+            width: 100%;
+            background: var(--white);
+            border-top: 1px solid rgba(0,0,0,0.06);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            z-index: 100;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+            padding: 5px 15px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            font-family: 'Tajawal', sans-serif;
+            position: relative;
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item span {
+            font-size: 0.65rem;
+            color: var(--text-light);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active i {
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active span {
+            color: var(--gold);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            width: 20px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 0 0 3px 3px;
+        }
+
+        /* ============ NOTIFICATIONS ============ */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--white);
+            padding: 14px 24px;
+            border-radius: 14px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-right: 4px solid var(--gold);
+            max-width: 350px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast i {
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        /* ============ VIDEO PLAYER ============ */
+        .video-card {
+            background: var(--white);
+            border-radius: 18px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+            border: 1px solid var(--light-gray);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .video-play-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--gold);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .video-play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .video-meta {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 430px) {
+            .app-container {
+                max-width: 100%;
+            }
+        }
+
+        /* ============ SCROLLBAR ============ */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-light);
+            border-radius: 2px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--gold-light);
+            margin-bottom: 15px;
+        }
+
+        .empty-state h4 {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .empty-state p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Floating elements */
+        .float-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: genericFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes genericFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(5deg); }
+            50% { transform: translateY(-5px) rotate(-3deg); }
+            75% { transform: translateY(-20px) rotate(8deg); }
+        }
+
+        /* Link input area */
+        .link-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .link-input-group input {
+            flex: 1;
+        }
+
+        .link-input-group button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 12px;
+            background: var(--gold);
+            color: white;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .subjects-list {
+            padding: 10px 0;
+        }
+
+        .subject-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: var(--white);
+            border-radius: 14px;
+            margin-bottom: 8px;
+            border: 1px solid var(--light-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .subject-item:hover {
+            border-color: var(--gold-light);
+            transform: translateX(-3px);
+        }
+
+        .subject-num {
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .subject-name {
+            flex: 1;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .subject-arrow {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+    <div class="loading-logo">NUSC</div>
+    <div class="loading-bar">
+        <div class="loading-bar-fill"></div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMsg">تم بنجاح</span>
+</div>
+
+<div class="app-container">
+
+    <!-- Top Header -->
+    <header class="top-header" id="mainHeader">
+        <div class="header-logo">NUSC</div>
+        <div class="header-actions">
+            <button class="header-btn" onclick="showToast('لا توجد إشعارات جديدة')">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge"></span>
+            </button>
+            <button class="header-btn menu-btn" onclick="toggleSideMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Side Menu Overlay -->
+    <div class="side-menu-overlay" id="sideMenuOverlay" onclick="toggleSideMenu()"></div>
+
+    <!-- Side Menu -->
+    <nav class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <div class="side-menu-avatar">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="side-menu-name">أحمد محمد</div>
+            <div class="side-menu-email">ahmed@nusc.edu</div>
+        </div>
+        <div class="side-menu-items">
+            <button class="side-menu-item" onclick="navigateTo('home'); toggleSideMenu();">
+                <i class="fas fa-home"></i> الرئيسية
+            </button>
+            <button class="side-menu-item" onclick="navigateTo('profile'); toggleSideMenu();">
+                <i class="fas fa-user"></i> الملف الشخصي
+            </button>
+            <button class="side-menu-item" onclick="navigateTo('books'); toggleSideMenu();">
+                <i class="fas fa-book"></i> المكتبة الرقمية
+            </button>
+            <button class="side-menu-item" onclick="navigateTo('ai'); toggleSideMenu();">
+                <i class="fas fa-robot"></i> مساعد AI
+            </button>
+            <div class="side-menu-divider"></div>
+            <button class="side-menu-item" onclick="showToast('الإعدادات قريباً')">
+                <i class="fas fa-cog"></i> الإعدادات
+            </button>
+            <button class="side-menu-item" onclick="showToast('المساعدة والدعم')">
+                <i class="fas fa-question-circle"></i> المساعدة
+            </button>
+            <button class="side-menu-item" onclick="showToast('الشروط والأحكام')">
+                <i class="fas fa-file-contract"></i> الشروط والأحكام
+            </button>
+            <div class="side-menu-divider"></div>
+            <button class="side-menu-item" onclick="showToast('تم تسجيل الخروج')" style="color: #EF5350;">
+                <i class="fas fa-sign-out-alt" style="color: #EF5350;"></i> تسجيل الخروج
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============ HOME PAGE ============ -->
+    <div class="page active" id="page-home">
+        <div class="welcome-section">
+            <div class="welcome-greeting">مرحباً بك 👋</div>
+            <div class="welcome-name">أهلاً، <span>أحمد</span></div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" placeholder="ابحث عن كلية، مادة، كتاب..." id="searchInput" oninput="filterFaculties()">
+            <i class="fas fa-search"></i>
+        </div>
+
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-university"></i></div>
+                <div class="stat-number">12</div>
+                <div class="stat-label">كلية</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-book-open"></i></div>
+                <div class="stat-number">150+</div>
+                <div class="stat-label">مادة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-number">5K+</div>
+                <div class="stat-label">طالب</div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <h3>📚 الكليات المتاحة</h3>
+            <a href="#" onclick="showToast('عرض الكل')">عرض الكل</a>
+        </div>
+
+        <div class="faculties-grid" id="facultiesGrid">
+            <!-- Science -->
+            <div class="faculty-card faculty-science" onclick="openFaculty('science')" data-name="كلية العلوم">
+                <div class="faculty-icon">
+                    <i class="fas fa-atom"></i>
+                </div>
+                <div class="faculty-name">كلية العلوم</div>
+                <div class="faculty-count">15 تخصص</div>
+            </div>
+
+            <!-- Pharmacy -->
+            <div class="faculty-card faculty-pharmacy" onclick="openFaculty('pharmacy')" data-name="كلية الصيدلة">
+                <div class="faculty-icon">
+                    <i class="fas fa-pills"></i>
+                </div>
+                <div class="faculty-name">كلية الصيدلة</div>
+                <div class="faculty-count">8 تخصصات</div>
+            </div>
+
+            <!-- Engineering -->
+            <div class="faculty-card faculty-engineering" onclick="openFaculty('engineering')" data-name="كلية الهندسة">
+                <div class="faculty-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="faculty-name">كلية الهندسة</div>
+                <div class="faculty-count">12 تخصص</div>
+            </div>
+
+            <!-- Medicine -->
+            <div class="faculty-card faculty-medicine" onclick="openFaculty('medicine')" data-name="كلية الطب">
+                <div class="faculty-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="faculty-name">كلية الطب</div>
+                <div class="faculty-count">10 تخصصات</div>
+            </div>
+
+            <!-- Arts -->
+            <div class="faculty-card faculty-arts" onclick="openFaculty('arts')" data-name="كلية الآداب">
+                <div class="faculty-icon">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <div class="faculty-name">كلية الآداب</div>
+                <div class="faculty-count">14 تخصص</div>
+            </div>
+
+            <!-- Commerce -->
+            <div class="faculty-card faculty-commerce" onclick="openFaculty('commerce')" data-name="كلية التجارة">
+                <div class="faculty-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="faculty-name">كلية التجارة</div>
+                <div class="faculty-count">9 تخصصات</div>
+            </div>
+
+            <!-- Law -->
+            <div class="faculty-card faculty-law" onclick="openFaculty('law')" data-name="كلية الحقوق">
+                <div class="faculty-icon">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <div class="faculty-name">كلية الحقوق</div>
+                <div class="faculty-count">6 تخصصات</div>
+            </div>
+
+            <!-- Computer Science -->
+            <div class="faculty-card faculty-cs" onclick="openFaculty('cs')" data-name="كلية الحاسبات">
+                <div class="faculty-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <div class="faculty-name">كلية الحاسبات</div>
+                <div class="faculty-count">7 تخصصات</div>
+            </div>
+
+            <!-- Nursing -->
+            <div class="faculty-card faculty-nursing" onclick="openFaculty('nursing')" data-name="كلية التمريض">
+                <div class="faculty-icon">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <div class="faculty-name">كلية التمريض</div>
+                <div class="faculty-count">5 تخصصات</div>
+            </div>
+
+            <!-- Education -->
+            <div class="faculty-card faculty-education" onclick="openFaculty('education')" data-name="كلية التربية">
+                <div class="faculty-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <div class="faculty-name">كلية التربية</div>
+                <div class="faculty-count">11 تخصص</div>
+            </div>
+
+            <!-- Dentistry -->
+            <div class="faculty-card faculty-dentistry" onclick="openFaculty('dentistry')" data-name="كلية طب الأسنان">
+                <div class="faculty-icon">
+                    <i class="fas fa-tooth"></i>
+                </div>
+                <div class="faculty-name">طب الأسنان</div>
+                <div class="faculty-count">6 تخصصات</div>
+            </div>
+
+            <!-- Agriculture -->
+            <div class="faculty-card faculty-agriculture" onclick="openFaculty('agriculture')" data-name="كلية الزراعة">
+                <div class="faculty-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="faculty-name">كلية الزراعة</div>
+                <div class="faculty-count">8 تخصصات</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ FACULTY DETAIL PAGE ============ -->
+    <div class="faculty-detail-page" id="facultyDetail">
+        <div class="faculty-hero" id="facultyHero">
+            <div class="faculty-animation" id="facultyAnimation"></div>
+            <div class="faculty-hero-content">
+                <button class="faculty-hero-back" onclick="closeFaculty()">
+                    <i class="fas fa-arrow-right"></i>
+                    رجوع
+                </button>
+                <div class="faculty-hero-icon" id="facultyHeroIcon">
+                    <i class="fas fa-atom"></i>
+                </div>
+                <h2 class="faculty-hero-title" id="facultyHeroTitle">كلية العلوم</h2>
+                <p class="faculty-hero-subtitle" id="facultyHeroSubtitle">اكتشف المعرفة العلمية</p>
+            </div>
+        </div>
+
+        <div class="faculty-tabs" id="facultyTabs">
+            <button class="faculty-tab active" onclick="switchFacultyTab('subjects', this)">المواد</button>
+            <button class="faculty-tab" onclick="switchFacultyTab('books', this)">الكتب</button>
+            <button class="faculty-tab" onclick="switchFacultyTab('videos', this)">الفيديوهات</button>
+            <button class="faculty-tab" onclick="switchFacultyTab('upload', this)">رفع محتوى</button>
+        </div>
+
+        <!-- Subjects Tab -->
+        <div class="tab-content active" id="tab-subjects">
+            <div class="subjects-list" id="subjectsList">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+
+        <!-- Books Tab -->
+        <div class="tab-content" id="tab-books">
+            <div id="facultyBooks">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+
+        <!-- Videos Tab -->
+        <div class="tab-content" id="tab-videos">
+            <div id="facultyVideos">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+
+        <!-- Upload Tab -->
+        <div class="tab-content" id="tab-upload">
+            <div class="upload-area" onclick="document.getElementById('fileUpload').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h4>ارفع كتاب أو ملف</h4>
+                <p>PDF, DOCX, PPT - حد أقصى 50MB</p>
+                <input type="file" id="fileUpload" hidden accept=".pdf,.docx,.pptx,.doc" onchange="handleFileUpload(this)">
+            </div>
+
+            <div class="upload-form">
+                <div class="form-group">
+                    <label>اسم الملف</label>
+                    <input type="text" placeholder="مثال: محاضرة الكيمياء العضوية" id="uploadFileName">
+                </div>
+
+                <div class="form-group">
+                    <label>نوع المحتوى</label>
+                    <select id="uploadType">
+                        <option value="book">كتاب دراسي</option>
+                        <option value="lecture">محاضرة</option>
+                        <option value="summary">ملخص</option>
+                        <option value="exam">امتحانات سابقة</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>رابط فيديو (اختياري)</label>
+                    <div class="link-input-group">
+                        <input type="url" placeholder="https://youtube.com/..." id="videoLink">
+                        <button onclick="addVideoLink()">إضافة</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>رفع فيديو مباشرة (اختياري)</label>
+                    <div class="upload-area" onclick="document.getElementById('videoUpload').click()" style="padding: 15px;">
+                        <i class="fas fa-video" style="font-size: 1.5rem;"></i>
+                        <p style="margin-top: 5px;">MP4, AVI, MOV - حد أقصى 500MB</p>
+                        <input type="file" id="videoUpload" hidden accept="video/*" onchange="handleVideoUpload(this)">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>وصف (اختياري)</label>
+                    <textarea placeholder="اكتب وصف قصير للمحتوى..." id="uploadDesc"></textarea>
+                </div>
+
+                <button class="btn-primary" onclick="submitUpload()">
+                    <i class="fas fa-upload"></i>
+                    رفع المحتوى
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ AI PAGE ============ -->
+    <div class="page" id="page-ai">
+        <div class="ai-header">
+            <div class="ai-logo">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h2 class="ai-title">مساعد NUSC الذكي</h2>
+            <p class="ai-subtitle">مدعوم بـ ChatGPT • Claude • Gemini • NotebookLM</p>
+        </div>
+
+        <div class="ai-models">
+            <button class="ai-model-chip active" onclick="selectAIModel('all', this)">
+                <span class="ai-model-dot dot-all"></span> الكل
+            </button>
+            <button class="ai-model-chip" onclick="selectAIModel('gpt', this)">
+                <span class="ai-model-dot dot-gpt"></span> ChatGPT
+            </button>
+            <button class="ai-model-chip" onclick="selectAIModel('claude', this)">
+                <span class="ai-model-dot dot-claude"></span> Claude
+            </button>
+            <button class="ai-model-chip" onclick="selectAIModel('gemini', this)">
+                <span class="ai-model-dot dot-gemini"></span> Gemini
+            </button>
+            <button class="ai-model-chip" onclick="selectAIModel('notebook', this)">
+                <span class="ai-model-dot dot-notebook"></span> NotebookLM
+            </button>
+        </div>
+
+        <div class="ai-suggestions">
+            <button class="ai-suggestion" onclick="askAI('اشرحلي الكيمياء العضوية')">🧪 اشرح الكيمياء العضوية</button>
+            <button class="ai-suggestion" onclick="askAI('لخصلي محاضرة الفيزياء')">📝 لخص محاضرة الفيزياء</button>
+            <button class="ai-suggestion" onclick="askAI('حل مسألة رياضيات')">🔢 حل مسألة رياضيات</button>
+            <button class="ai-suggestion" onclick="askAI('اعمل جدول مذاكرة')">📅 اعمل جدول مذاكرة</button>
+        </div>
+
+        <div class="ai-chat" id="aiChat">
+            <div class="ai-message bot">
+                <div class="msg-bubble">
+                    <div class="msg-model-tag">🤖 NUSC AI</div>
+                    أهلاً! أنا مساعد NUSC الذكي. أقدر أساعدك في أي سؤال دراسي. اسألني عن أي مادة أو موضوع! 🎓
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-input-area">
+            <input class="ai-input" type="text" placeholder="اكتب سؤالك هنا..." id="aiInput" onkeypress="if(event.key==='Enter')sendAIMessage()">
+            <button class="ai-send-btn" onclick="sendAIMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ============ BOOKS PAGE ============ -->
+    <div class="page" id="page-books">
+        <div class="books-header">
+            <h2 style="font-size: 1.4rem; font-weight: 800;">📚 المكتبة الرقمية</h2>
+            <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 5px;">آلاف الكتب والملخصات</p>
+        </div>
+
+        <div class="search-box" style="margin-top: 10px;">
+            <input type="text" placeholder="ابحث عن كتاب..." oninput="filterBooks(this.value)">
+            <i class="fas fa-search"></i>
+        </div>
+
+        <div class="books-filter">
+            <button class="filter-chip active" onclick="filterBookType('all', this)">الكل</button>
+            <button class="filter-chip" onclick="filterBookType('textbook', this)">كتب دراسية</button>
+            <button class="filter-chip" onclick="filterBookType('summary', this)">ملخصات</button>
+            <button class="filter-chip" onclick="filterBookType('exam', this)">امتحانات</button>
+            <button class="filter-chip" onclick="filterBookType('reference', this)">مراجع</button>
+        </div>
+
+        <div id="booksList">
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #E8F5E9, #C8E6C9);">
+                    📗
+                </div>
+                <div class="book-info">
+                    <div class="book-title">أساسيات الكيمياء العضوية</div>
+                    <div class="book-author">د. محمد أحمد</div>
+                    <div class="book-tags">
+                        <span class="book-tag" style="background: #E8F5E9; color: #43A047;">علوم</span>
+                        <span class="book-tag" style="background: #FFF3E0; color: #FB8C00;">كتاب</span>
+                    </div>
+                </div>
+                <div class="book-actions">
+                    <button class="book-action-btn" style="background: #E3F2FD; color: #1E88E5;" onclick="showToast('جاري التحميل...')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="book-action-btn" style="background: #FCE4EC; color: #EF5350;" onclick="showToast('تم الحفظ في المفضلة')">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #E3F2FD, #BBDEFB);">
+                    💊
+                </div>
+                <div class="book-info">
+                    <div class="book-title">علم الأدوية السريري</div>
+                    <div class="book-author">د. سارة خالد</div>
+                    <div class="book-tags">
+                        <span class="book-tag" style="background: #E3F2FD; color: #1E88E5;">صيدلة</span>
+                        <span class="book-tag" style="background: #F3E5F5; color: #8E24AA;">ملخص</span>
+                    </div>
+                </div>
+                <div class="book-actions">
+                    <button class="book-action-btn" style="background: #E3F2FD; color: #1E88E5;" onclick="showToast('جاري التحميل...')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="book-action-btn" style="background: #FCE4EC; color: #EF5350;" onclick="showToast('تم الحفظ في المفضلة')">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #FFF3E0, #FFE0B2);">
+                    ⚙️
+                </div>
+                <div class="book-info">
+                    <div class="book-title">ميكانيكا الموائع</div>
+                    <div class="book-author">د. عمر حسن</div>
+                    <div class="book-tags">
+                        <span class="book-tag" style="background: #FFF3E0; color: #FB8C00;">هندسة</span>
+                        <span class="book-tag" style="background: #E0F2F1; color: #00897B;">مرجع</span>
+                    </div>
+                </div>
+                <div class="book-actions">
+                    <button class="book-action-btn" style="background: #E3F2FD; color: #1E88E5;" onclick="showToast('جاري التحميل...')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="book-action-btn" style="background: #FCE4EC; color: #EF5350;" onclick="showToast('تم الحفظ في المفضلة')">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #E8EAF6, #C5CAE9);">
+                    💻
+                </div>
+                <div class="book-info">
+                    <div class="book-title">مقدمة في البرمجة بلغة Python</div>
+                    <div class="book-author">د. ياسر علي</div>
+                    <div class="book-tags">
+                        <span class="book-tag" style="background: #E8EAF6; color: #3949AB;">حاسبات</span>
+                        <span class="book-tag" style="background: #FFF3E0; color: #FB8C00;">كتاب</span>
+                    </div>
+                </div>
+                <div class="book-actions">
+                    <button class="book-action-btn" style="background: #E3F2FD; color: #1E88E5;" onclick="showToast('جاري التحميل...')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="book-action-btn" style="background: #FCE4EC; color: #EF5350;" onclick="showToast('تم الحفظ في المفضلة')">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #FCE4EC, #F8BBD0);">
+                    🫀
+                </div>
+                <div class="book-info">
+                    <div class="book-title">تشريح جسم الإنسان</div>
+                    <div class="book-author">د. فاطمة محمود</div>
+                    <div class="book-tags">
+                        <span class="book-tag" style="background: #FCE4EC; color: #E53935;">طب</span>
+                        <span class="book-tag" style="background: #FFF3E0; color: #FB8C00;">كتاب</span>
+                    </div>
+                </div>
+                <div class="book-actions">
+                    <button class="book-action-btn" style="background: #E3F2FD; color: #1E88E5;" onclick="showToast('جاري التحميل...')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="book-action-btn" style="background: #FCE4EC; color: #EF5350;" onclick="showToast('تم الحفظ في المفضلة')">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ PROFILE PAGE ============ -->
+    <div class="page" id="page-profile">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user-graduate"></i>
+                <div class="profile-avatar-edit">
+                    <i class="fas fa-camera"></i>
+                </div>
+            </div>
+            <h2 class="profile-name">أحمد محمد علي</h2>
+            <p class="profile-faculty">كلية العلوم - الكيمياء</p>
+
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <div class="profile-stat-num">45</div>
+                    <div class="profile-stat-label">ملف محفوظ</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-num">12</div>
+                    <div class="profile-stat-label">مادة مكتملة</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-num">89%</div>
+                    <div class="profile-stat-label">نسبة التقدم</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h3 class="profile-section-title">
+                <i class="fas fa-info-circle"></i> البيانات الشخصية
+            </h3>
+
+            <div class="profile-item">
+                <div class="profile-item-icon"><i class="fas fa-user"></i></div>
+                <div class="profile-item-info">
+                    <div class="profile-item-label">الاسم الكامل</div>
+                    <div class="profile-item-value">أحمد محمد علي</div>
+                </div>
+            </div>
+
+            <div class="profile-item">
+                <div class="profile-item-icon"><i class="fas fa-id-card"></i></div>
+                <div class="profile-item-info">
+                    <div class="profile-item-label">رقم القيد</div>
+                    <div class="profile-item-value">2024/001234</div>
+                </div>
+            </div>
+
+            <div class="profile-item">
+                <div class="profile-item-icon"><i class="fas fa-envelope"></i></div>
+                <div class="profile-item-info">
+                    <div class="profile-item-label">البريد الإلكتروني</div>
+                    <div class="profile-item-value">ahmed@nusc.edu</div>
+                </div>
+            </div>
+
+            <div class="profile-item">
+                <div class="profile-item-icon"><i class="fas fa-phone"></i></div>
+                <div class="profile-item-info">
+                    <div class="profile-item-label">رقم الهاتف</div>
+                    <div class="profile-item-value">+249 912 345 678</div>
+                </div>
+            </div>
+
+            <div class="profile-item">
+                <div class="profile-item-icon"><i class="fas fa-university"></i></div>
+                <div class="profile-item-info">
+                    <div class="profile-item-label">الكلية</div>
+                    <div class="profile-item-value">كلية العلوم</div>
+                </div>
+            </div>
+
+            <div class="profile-item">
+                <div class="profile-item-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="profile-item-info">
+                    <div class="profile-item-label">التخصص</div>
+                    <div class="profile-item-value">الكيمياء</div>
+                </div>
+            </div>
+
+            <div class="profile-item">
+                <div class="profile-item-icon"><i class="fas fa-layer-group"></i></div>
+                <div class="profile-item-info">
+                    <div class="profile-item-label">المستوى</div>
+                    <div class="profile-item-value">المستوى الثالث</div>
+                </div>
+            </div>
+
+            <div class="profile-item">
+                <div class="profile-item-icon"><i class="fas fa-calendar"></i></div>
+                <div class="profile-item-info">
+                    <div class="profile-item-label">سنة الالتحاق</div>
+                    <div class="profile-item-value">2022</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <button class="btn-primary" onclick="showToast('تم حفظ التعديلات')">
+                <i class="fas fa-save"></i> حفظ التعديلات
+            </button>
+            <button class="btn-secondary" onclick="showToast('تم تسجيل الخروج')">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="navigateTo('home')">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </button>
+        <button class="nav-item" onclick="navigateTo('books')">
+            <i class="fas fa-book"></i>
+            <span>المكتبة</span>
+        </button>
+        <button class="nav-item" onclick="navigateTo('ai')">
+            <i class="fas fa-robot"></i>
+            <span>AI مساعد</span>
+        </button>
+        <button class="nav-item" onclick="navigateTo('profile')">
+            <i class="fas fa-user"></i>
+            <span>حسابي</span>
+        </button>
+    </nav>
+</div>
+
+<script>
+    // ============ DATA ============
+    const facultyData = {
+        science: {
+            name: 'كلية العلوم',
+            icon: 'fa-atom',
+            subtitle: 'اكتشف عالم العلوم والمعرفة',
+            color: '#66BB6A',
+            bgGradient: 'linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%)',
+            tabColor: '#43A047',
+            subjects: [
+                'الكيمياء العضوية', 'الكيمياء الفيزيائية', 'الفيزياء العامة',
+                'الرياضيات التطبيقية', 'الأحياء الدقيقة', 'الجيولوجيا',
+                'الإحصاء', 'فيزياء الكم', 'كيمياء تحليلية', 'أحياء جزيئية'
+            ],
+            animations: 'atoms'
+        },
+        pharmacy: {
+            name: 'كلية الصيدلة',
+            icon: 'fa-pills',
+            subtitle: 'عالم الأدوية والعلاج',
+            color: '#42A5F5',
+            bgGradient: 'linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%)',
+            tabColor: '#1E88E5',
+            subjects: [
+                'علم الأدوية', 'الكيمياء الصيدلية', 'الصيدلانيات',
+                'علم السموم', 'الكيمياء الحيوية', 'التشريح الصيدلي',
+                'الصيدلة السريرية', 'تكنولوجيا صيدلية'
+            ],
+            animations: 'pills'
+        },
+        engineering: {
+            name: 'كلية الهندسة',
+            icon: 'fa-cogs',
+            subtitle: 'ابنِ المستقبل بالهندسة',
+            color: '#FFA726',
+            bgGradient: 'linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%)',
+            tabColor: '#FB8C00',
+            subjects: [
+                'الرياضيات الهندسية', 'ميكانيكا المواد', 'الدوائر الكهربائية',
+                'ميكانيكا الموائع', 'التحكم الآلي', 'الديناميكا الحرارية',
+                'هندسة البرمجيات', 'تصميم الآلات', 'إلكترونيات', 'هندسة الاتصالات'
+            ],
+            animations: 'gears'
+        },
+        medicine: {
+            name: 'كلية الطب',
+            icon: 'fa-heartbeat',
+            subtitle: 'نحو صحة أفضل للجميع',
+            color: '#EF5350',
+            bgGradient: 'linear-gradient(135deg, #FCE4EC 0%, #F8BBD0 100%)',
+            tabColor: '#E53935',
+            subjects: [
+                'التشريح', 'وظائف الأعضاء', 'الكيمياء الحيوية الطبية',
+                'علم الأمراض', 'علم الأدوية الطبي', 'الطب الباطني',
+                'الجراحة العامة', 'طب الأطفال', 'أمراض النساء', 'الطب النفسي'
+            ],
+            animations: 'heartbeat'
+        },
+        arts: {
+            name: 'كلية الآداب',
+            icon: 'fa-palette',
+            subtitle: 'عالم الأدب والإبداع',
+            color: '#AB47BC',
+            bgGradient: 'linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%)',
+            tabColor: '#8E24AA',
+            subjects: [
+                'اللغة العربية', 'اللغة الإنجليزية', 'اللغة الفرنسية',
+                'التاريخ', 'الجغرافيا', 'علم النفس', 'علم الاجتماع',
+                'الفلسفة', 'الإعلام', 'المكتبات'
+            ],
+            animations: 'books'
+        },
+        commerce: {
+            name: 'كلية التجارة',
+            icon: 'fa-chart-line',
+            subtitle: 'عالم الأعمال والاقتصاد',
+            color: '#26A69A',
+            bgGradient: 'linear-gradient(135deg, #E0F2F1 0%, #B2DFDB 100%)',
+            tabColor: '#00897B',
+            subjects: [
+                'المحاسبة المالية', 'إدارة الأعمال', 'الاقتصاد الجزئي',
+                'الاقتصاد الكلي', 'التسويق', 'إدارة الموارد البشرية',
+                'التمويل والاستثمار', 'المحاسبة الإدارية', 'التجارة الإلكترونية'
+            ],
+            animations: 'charts'
+        },
+        law: {
+            name: 'كلية الحقوق',
+            icon: 'fa-balance-scale',
+            subtitle: 'العدالة أساس الحكم',
+            color: '#8D6E63',
+            bgGradient: 'linear-gradient(135deg, #EFEBE9 0%, #D7CCC8 100%)',
+            tabColor: '#6D4C41',
+            subjects: [
+                'القانون المدني', 'القانون الجنائي', 'القانون الدستوري',
+                'القانون التجاري', 'القانون الدولي', 'أصول الفقه'
+            ],
+            animations: 'scales'
+        },
+        cs: {
+            name: 'كلية الحاسبات',
+            icon: 'fa-laptop-code',
+            subtitle: 'عالم التكنولوجيا والبرمجة',
+            color: '#5C6BC0',
+            bgGradient: 'linear-gradient(135deg, #E8EAF6 0%, #C5CAE9 100%)',
+            tabColor: '#3949AB',
+            subjects: [
+                'البرمجة بلغة C++', 'هياكل البيانات', 'قواعد البيانات',
+                'الذكاء الاصطناعي', 'شبكات الحاسوب', 'أنظمة التشغيل',
+                'تطوير الويب'
+            ],
+            animations: 'code'
+        },
+        nursing: {
+            name: 'كلية التمريض',
+            icon: 'fa-stethoscope',
+            subtitle: 'رعاية صحية متميزة',
+            color: '#FFB300',
+            bgGradient: 'linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%)',
+            tabColor: '#FFA000',
+            subjects: [
+                'أساسيات التمريض', 'تمريض الباطنة', 'تمريض الجراحة',
+                'تمريض الأطفال', 'تمريض النساء'
+            ],
+            animations: 'care'
+        },
+        education: {
+            name: 'كلية التربية',
+            icon: 'fa-chalkboard-teacher',
+            subtitle: 'بناء أجيال المستقبل',
+            color: '#29B6F6',
+            bgGradient: 'linear-gradient(135deg, #E1F5FE 0%, #B3E5FC 100%)',
+            tabColor: '#039BE5',
+            subjects: [
+                'أصول التربية', 'علم النفس التربوي', 'المناهج وطرق التدريس',
+                'تكنولوجيا التعليم', 'التربية الخاصة', 'الإدارة التعليمية'
+            ],
+            animations: 'education'
+        },
+        dentistry: {
+            name: 'كلية طب الأسنان',
+            icon: 'fa-tooth',
+            subtitle: 'ابتسامة صحية للجميع',
+            color: '#9CCC65',
+            bgGradient: 'linear-gradient(135deg, #F1F8E9 0%, #DCEDC8 100%)',
+            tabColor: '#7CB342',
+            subjects: [
+                'تشريح الفم', 'جراحة الفم', 'التركيبات السنية',
+                'تقويم الأسنان', 'علاج الجذور', 'طب أسنان الأطفال'
+            ],
+            animations: 'dental'
+        },
+        agriculture: {
+            name: 'كلية الزراعة',
+            icon: 'fa-seedling',
+            subtitle: 'نحو زراعة مستدامة',
+            color: '#81C784',
+            bgGradient: 'linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%)',
+            tabColor: '#66BB6A',
+            subjects: [
+                'علم المحاصيل', 'علم التربة', 'الإنتاج الحيواني',
+                'البستنة', 'الاقتصاد الزراعي', 'الهندسة الزراعية',
+                'وقاية النباتات', 'تصنيع غذائي'
+            ],
+            animations: 'plants'
+        }
+    };
+
+    let currentFaculty = null;
+    let currentAIModel = 'all';
+
+    // ============ LOADING ============
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+        }, 2200);
+    });
+
+    // ============ NAVIGATION ============
+    function navigateTo(page) {
+        // Hide faculty detail
+        document.getElementById('facultyDetail').classList.remove('active');
+        document.getElementById('facultyDetail').style.display = 'none';
+        document.getElementById('mainHeader').style.display = 'flex';
+
+        // Show/hide pages
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + page).classList.add('active');
+
+        // Update nav
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        // Show bottom nav
+        document.querySelector('.bottom-nav').style.display = 'flex';
+    }
+
+    // ============ SIDE MENU ============
+    function toggleSideMenu() {
+        document.getElementById('sideMenu').classList.toggle('active');
+        document.getElementById('sideMenuOverlay').classList.toggle('active');
+    }
+
+    // ============ TOAST ============
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toastMsg').textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // ============ SEARCH / FILTER ============
+    function filterFaculties() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('.faculty-card').forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            card.style.display = name.includes(query) ? '' : 'none';
+        });
+    }
+
+    // ============ OPEN FACULTY ============
+    function openFaculty(key) {
+        currentFaculty = key;
+        const data = facultyData[key];
+
+        // Hide pages
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('mainHeader').style.display = 'none';
+
+        // Show faculty detail
+        const detail = document.getElementById('facultyDetail');
+        detail.style.display = 'block';
+        detail.classList.add('active');
+
+        // Update hero
+        document.getElementById('facultyHero').style.background = data.bgGradient;
+        document.getElementById('facultyHeroIcon').innerHTML = `<i class="fas ${data.icon}"></i>`;
+        document.getElementById('facultyHeroIcon').style.background = data.color;
+        document.getElementById('facultyHeroTitle').textContent = data.name;
+        document.getElementById('facultyHeroSubtitle').textContent = data.subtitle;
+
+        // Update tabs color
+        document.querySelectorAll('.faculty-tab').forEach(tab => {
+            tab.style.setProperty('--tab-active-color', data.tabColor);
+        });
+        document.querySelector('.faculty-tab.active').style.background = data.tabColor;
+
+        // Generate animations
+        generateFacultyAnimations(key, data);
+
+        // Generate subjects
+        generateSubjects(data);
+
+        // Generate books
+        generateFacultyBooks(data);
+
+        // Generate videos
+        generateFacultyVideos(data);
+
+        // Reset to subjects tab
+        switchFacultyTab('subjects', document.querySelector('.faculty-tab'));
+
+        // Scroll to top
+        window.scrollTo(0, 0);
+    }
+
+    function closeFaculty() {
+        document.getElementById('facultyDetail').style.display = 'none';
+        document.getElementById('facultyDetail').classList.remove('active');
+        document.getElementById('mainHeader').style.display = 'flex';
+        document.getElementById('page-home').classList.add('active');
+    }
+
+    // ============ FACULTY ANIMATIONS ============
+    function generateFacultyAnimations(key, data) {
+        const container = document.getElementById('facultyAnimation');
+        container.innerHTML = '';
+
+        const animTypes = {
+            atoms: () => {
+                for (let i = 0; i < 5; i++) {
+                    const orbit = document.createElement('div');
+                    orbit.className = 'atom-orbit';
+                    orbit.style.cssText = `
+                        width: ${60 + i * 40}px; height: ${60 + i * 40}px;
+                        top: ${Math.random() * 60}%; right: ${Math.random() * 60}%;
+                        border-color: rgba(102, 187, 106, ${0.15 - i * 0.02});
+                        animation-duration: ${5 + i * 2}s;
+                        animation-direction: ${i % 2 === 0 ? 'normal' : 'reverse'};
+                    `;
+                    container.appendChild(orbit);
+                }
+                for (let i = 0; i < 12; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['⚛️', '🔬', '🧪', '🧬', '⚗️'][Math.floor(Math.random() * 5)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            },
+            pills: () => {
+                for (let i = 0; i < 15; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['💊', '🧴', '💉', '🩺', '🔬', '⚕️'][Math.floor(Math.random() * 6)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            },
+            gears: () => {
+                for (let i = 0; i < 12; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['⚙️', '🔧', '🔩', '📐', '📏', '🏗️'][Math.floor(Math.random() * 6)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            },
+            heartbeat: () => {
+                for (let i = 0; i < 12; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['❤️', '🫀', '🩺', '🧬', '🔬', '💉'][Math.floor(Math.random() * 6)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            },
+            books: () => {
+                for (let i = 0; i < 12; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['📚', '✍️', '🎨', '📖', '🖋️', '📝'][Math.floor(Math.random() * 6)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            },
+            charts: () => {
+                for (let i = 0; i < 12; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['📊', '💰', '📈', '💵', '🏦', '📋'][Math.floor(Math.random() * 6)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            },
+            scales: () => {
+                for (let i = 0; i < 10; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['⚖️', '📜', '🏛️', '📋', '🔍', '📖'][Math.floor(Math.random() * 6)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            },
+            code: () => {
+                for (let i = 0; i < 12; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['💻', '🖥️', '⌨️', '🔌', '📱', '🤖'][Math.floor(Math.random() * 6)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            },
+            care: () => {
+                for (let i = 0; i < 10; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['🩺', '💉', '🏥', '❤️‍🩹', '🩹', '👩‍⚕️'][Math.floor(Math.random() * 6)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            },
+            education: () => {
+                for (let i = 0; i < 12; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['📚', '🎓', '✏️', '📝', '🏫', '👨‍🏫'][Math.floor(Math.random() * 6)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            },
+            dental: () => {
+                for (let i = 0; i < 10; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['🦷', '😁', '🪥', '🩺', '✨', '💎'][Math.floor(Math.random() * 6)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            },
+            plants: () => {
+                for (let i = 0; i < 12; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'float-element';
+                    el.innerHTML = ['🌱', '🌿', '🌾', '🌻', '🍃', '🌳'][Math.floor(Math.random() * 6)];
+                    el.style.cssText = `
+                        font-size: ${12 + Math.random() * 18}px;
+                        top: ${Math.random() * 80}%;
+                        ${Math.random() > 0.5 ? 'right' : 'left'}: ${Math.random() * 80}%;
+                        animation-delay: ${Math.random() * 5}s;
+                        animation-duration: ${4 + Math.random() * 6}s;
+                    `;
+                    container.appendChild(el);
+                }
+            }
+        };
+
+        if (animTypes[data.animations]) {
+            animTypes[data.animations]();
+        }
+    }
+
+    // ============ GENERATE SUBJECTS ============
+    function generateSubjects(data) {
+        const list = document.getElementById('subjectsList');
+        list.innerHTML = '';
+        data.subjects.forEach((sub, i) => {
+            list.innerHTML += `
+                <div class="subject-item" onclick="showToast('فتح ${sub}')">
+                    <div class="subject-num" style="background: ${data.color}">${i + 1}</div>
+                    <div class="subject-name">${sub}</div>
+                    <div class="subject-arrow"><i class="fas fa-chevron-left"></i></div>
+                </div>
+            `;
+        });
+    }
+
+    // ============ GENERATE FACULTY BOOKS ============
+    function generateFacultyBooks(data) {
+        const container = document.getElementById('facultyBooks');
+        container.innerHTML = '';
+        data.subjects.slice(0, 4).forEach(sub => {
+            container.innerHTML += `
+                <div class="material-card">
+                    <div class="material-icon pdf"><i class="fas fa-file-pdf"></i></div>
+                    <div class="material-info">
+                        <div class="material-title">كتاب ${sub}</div>
+                        <div class="material-meta">PDF • 15 MB • تم الرفع: 2024</div>
+                    </div>
+                    <button class="material-action" onclick="showToast('جاري التحميل...')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            `;
+        });
+        container.innerHTML += `
+            <div class="empty-state" style="padding: 20px;">
+                <p style="font-size: 0.8rem; color: var(--text-light);">لرفع المزيد من الكتب، اذهب لتبويب "رفع محتوى"</p>
+            </div>
+        `;
+    }
+
+    // ============ GENERATE FACULTY VIDEOS ============
+    function generateFacultyVideos(data) {
+        const container = document.getElementById('facultyVideos');
+        container.innerHTML = '';
+        data.subjects.slice(0, 3).forEach((sub, i) => {
+            const colors = [data.bgGradient];
+            container.innerHTML += `
+                <div class="video-card">
+                    <div class="video-thumbnail" style="background: ${data.bgGradient};" onclick="showToast('جاري تشغيل الفيديو...')">
+                        <div class="video-play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <span class="video-duration">${20 + i * 15}:00</span>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">شرح ${sub} - المحاضرة ${i + 1}</div>
+                        <div class="video-meta">
+                            <span><i class="fas fa-eye"></i> ${120 + i * 50}</span>
+                            <span><i class="fas fa-clock"></i> قبل ${i + 1} يوم</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML += `
+            <div class="material-card" onclick="showToast('فتح الرابط...')">
+                <div class="material-icon link"><i class="fas fa-link"></i></div>
+                <div class="material-info">
+                    <div class="material-title">قائمة تشغيل YouTube - ${data.name}</div>
+                    <div class="material-meta">رابط خارجي • YouTube</div>
+                </div>
+                <button class="material-action">
+                    <i class="fas fa-external-link-alt"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    // ============ SWITCH FACULTY TAB ============
+    function switchFacultyTab(tab, btn) {
+        const data = facultyData[currentFaculty];
+
+        document.querySelectorAll('.faculty-tab').forEach(t => {
+            t.classList.remove('active');
+            t.style.background = 'var(--light-gray)';
+            t.style.color = 'var(--text-light)';
+        });
+        btn.classList.add('active');
+        btn.style.background = data.tabColor;
+        btn.style.color = 'white';
+
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    // ============ UPLOAD ============
+    function handleFileUpload(input) {
+        if (input.files.length > 0) {
+            document.getElementById('uploadFileName').value = input.files[0].name;
+            showToast('تم اختيار: ' + input.files[0].name);
+        }
+    }
+
+    function handleVideoUpload(input) {
+        if (input.files.length > 0) {
+            showToast('تم اختيار فيديو: ' + input.files[0].name);
+        }
+    }
+
+    function addVideoLink() {
+        const link = document.getElementById('videoLink').value;
+        if (link) {
+            showToast('تم إضافة رابط الفيديو ✅');
+        } else {
+            showToast('أدخل رابط الفيديو أولاً');
+        }
+    }
+
+    function submitUpload() {
+        const name = document.getElementById('uploadFileName').value;
+        if (name) {
+            showToast('تم رفع "' + name + '" بنجاح! ✅');
+            document.getElementById('uploadFileName').value = '';
+            document.getElementById('videoLink').value = '';
+            document.getElementById('uploadDesc').value = '';
+        } else {
+            showToast('اختر ملف أولاً');
+        }
+    }
+
+    // ============ AI CHAT ============
+    function selectAIModel(model, btn) {
+        currentAIModel = model;
+        document.querySelectorAll('.ai-model-chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+
+        const modelNames = {
+            'all': 'جميع النماذج',
+            'gpt': 'ChatGPT',
+            'claude': 'Claude',
+            'gemini': 'Gemini',
+            'notebook': 'NotebookLM'
+        };
+        showToast('تم اختيار: ' + modelNames[model]);
+    }
+
+    function askAI(question) {
+        document.getElementById('aiInput').value = question;
+        sendAIMessage();
+    }
+
+    function sendAIMessage() {
+        const input = document.getElementById('aiInput');
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        const chat = document.getElementById('aiChat');
+
+        // Add user message
+        chat.innerHTML += `
+            <div class="ai-message user">
+                <div class="msg-bubble">${msg}</div>
+            </div>
+        `;
+
+        input.value = '';
+
+        // Simulate AI response
+        setTimeout(() => {
+            const responses = getAIResponse(msg);
+            responses.forEach((resp, i) => {
+                setTimeout(() => {
+                    chat.innerHTML += `
+                        <div class="ai-message bot">
+                            <div class="msg-bubble">
+                                <div class="msg-model-tag">${resp.model}</div>
+                                ${resp.text}
+                            </div>
+                        </div>
+                    `;
+                    chat.scrollTop = chat.scrollHeight;
+                }, i * 800);
+            });
+        }, 600);
+
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    function getAIResponse(msg) {
+        const responses = [];
+        const modelTags = {
+            'gpt': '🟢 ChatGPT',
+            'claude': '🟠 Claude',
+            'gemini': '🔵 Gemini',
+            'notebook': '🟡 NotebookLM'
+        };
+
+        const answers = {
+            'gpt': `هذا سؤال ممتاز! دعني أشرح لك بالتفصيل...\n\nبناءً على المعلومات المتاحة، "${msg}" هو موضوع مهم جداً في المجال الأكاديمي. النقاط الرئيسية هي:\n\n1️⃣ الأساسيات النظرية\n2️⃣ التطبيقات العملية\n3️⃣ المراجع المقترحة\n\nهل تحتاج مزيد من التفصيل؟ 📚`,
+            'claude': `أهلاً! سأساعدك في فهم "${msg}" بطريقة منظمة.\n\n📌 أولاً: المفاهيم الأساسية\n📌 ثانياً: الربط بالتطبيقات\n📌 ثالثاً: نصائح للمذاكرة\n\nالموضوع يحتاج فهم تدريجي. ابدأ بالأساسيات ثم انتقل للتفاصيل. 🎯`,
+            'gemini': `مرحباً! بخصوص "${msg}":\n\n🔍 التحليل: هذا الموضوع يتعلق بعدة جوانب مهمة\n📊 الإحصائيات: الطلاب الذين يفهمون الأساسيات أولاً يحققون نتائج أفضل بنسبة 85%\n💡 نصيحة: استخدم الخرائط الذهنية للمراجعة\n\nجرب تطبيق ما تعلمته عملياً! 🚀`,
+            'notebook': `📓 من ملاحظاتك ومحاضراتك:\n\nبخصوص "${msg}" - وجدت المراجع التالية في محتواك:\n\n📖 الكتاب المقرر - الفصل 3 و 4\n📝 ملخص المحاضرة رقم 7\n🎥 فيديو الشرح المرفوع سابقاً\n\nأنصحك بمراجعة هذه المصادر معاً 📚`
+        };
+
+        if (currentAIModel === 'all') {
+            Object.keys(modelTags).forEach(model => {
+                responses.push({
+                    model: modelTags[model],
+                    text: answers[model]
+                });
+            });
+        } else {
+            responses.push({
+                model: modelTags[currentAIModel],
+                text: answers[currentAIModel]
+            });
+        }
+
+        return responses;
+    }
+
+    // ============ BOOKS FILTER ============
+    function filterBookType(type, btn) {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        showToast('عرض: ' + btn.textContent);
+    }
+
+    function filterBooks(query) {
+        // Simple search simulation
+        const cards = document.querySelectorAll('.book-card');
+        cards.forEach(card => {
+            const title = card.querySelector('.book-title').textContent.toLowerCase();
+            card.style.display = title.includes(query.toLowerCase()) ? '' : 'none';
+        });
+    }
+</script>
+
+</body>
+</html>
