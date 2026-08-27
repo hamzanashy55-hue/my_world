@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مستودع الكتب والمحاضرات — NUSC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/colleges.css">
+<style>
+  .page-head{ max-width:1080px; margin:20px auto 0; padding:0 20px; display:flex; align-items:center; gap:12px; }
+  .page-head .ic{ width:46px; height:46px; border-radius:13px; background:var(--gold-soft); display:flex; align-items:center; justify-content:center; font-size:21px; }
+  .page-head h1{ font-size:20px; margin:0; }
+  .page-head p{ font-size:12.5px; color:var(--sub); margin:2px 0 0; }
+
+  .upload-card{ margin-top:20px; }
+  .type-toggle{ display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+  .type-btn{ padding:9px 16px; border-radius:10px; border:1px solid var(--line); background:#fff; font-size:12.5px; font-weight:700; cursor:pointer; color:var(--sub); }
+  .type-btn.active{ background:var(--gold-soft); border-color:var(--gold); color:var(--gold-deep); }
+  .conditional{ display:none; }
+  .conditional.show{ display:block; }
+
+  .material-item{ margin-bottom:14px; }
+  .material-item .m-title{ display:flex; align-items:center; gap:10px; font-family:'Cairo',sans-serif; font-weight:700; font-size:14.5px; margin-bottom:10px; }
+  .explain-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; background:var(--surface); border:1px solid var(--line); border-radius:10px; margin-bottom:8px; font-size:12.5px; }
+  .explain-row .tag{ font-weight:700; color:var(--gold-deep); }
+  .add-explain{ font-size:12px; font-weight:700; color:var(--gold-deep); background:none; border:1px dashed var(--line); border-radius:10px; padding:8px 12px; cursor:pointer; width:100%; text-align:center; }
+  .add-explain:hover{ border-color:var(--gold); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-row">
+    <div class="brand">
+      <div class="logo-dot">N</div>
+      <div><div class="brand-name">NUSC</div><div class="brand-sub">بوابة الطالب</div></div>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span class="college-chip" data-role="college-chip"></span>
+      <div class="menu-wrap">
+        <button class="menu-btn" data-role="menu-btn" aria-label="خيارات إضافية">⋮</button>
+        <div class="menu-dropdown" data-role="menu-dropdown">
+          <div class="menu-item">⚙️ الإعدادات</div>
+          <div class="menu-item">🆘 المساعدة والدعم</div>
+          <div class="menu-sep"></div>
+          <div class="menu-item">🚪 تسجيل الخروج</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="page-head">
+  <div class="ic" id="pageIcon"></div>
+  <div>
+    <h1>مستودع الكتب والمحاضرات</h1>
+    <p id="pageSub"></p>
+  </div>
+</div>
+
+<main class="container section">
+  <div class="card upload-card">
+    <h2 style="margin-top:0;">إضافة محتوى دراسي جديد</h2>
+    <div class="field">
+      <label>اسم المادة / المقرر</label>
+      <input type="text" placeholder="مثال: الكيمياء الدوائية العامة">
+    </div>
+    <div class="field">
+      <label>نوع المحتوى</label>
+      <div class="type-toggle">
+        <button class="type-btn active" data-type="book">📘 كتاب أو ملخص (PDF)</button>
+        <button class="type-btn" data-type="link">🔗 رابط فيديو خارجي</button>
+        <button class="type-btn" data-type="video">🎥 رفع فيديو مباشر</button>
+      </div>
+      <div class="conditional show" data-cond="book">
+        <div class="field"><label>اختيار الملف</label><input type="file" accept="application/pdf"></div>
+      </div>
+      <div class="conditional" data-cond="link">
+        <div class="field"><label>رابط الفيديو (يوتيوب / درايف)</label><input type="url" placeholder="https://..."></div>
+      </div>
+      <div class="conditional" data-cond="video">
+        <div class="field"><label>ملف الفيديو — لو أنت اللي بتشرح ارفعه هنا مباشرة</label><input type="file" accept="video/*"></div>
+      </div>
+    </div>
+    <button class="btn primary">نشر المحتوى للمنصة</button>
+  </div>
+
+  <div class="section">
+    <h2>المحتوى الحالي</h2>
+    <div id="materialsList"></div>
+  </div>
+</main>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item" data-page="home"><span class="ic">🏠</span>الرئيسية</a>
+  <a href="materials.html" class="nav-item" data-page="materials"><span class="ic">📚</span>المقررات</a>
+  <a href="ai-hub.html" class="nav-item" data-page="ai"><span class="ic">🤖</span>الذكاء الاصطناعي</a>
+  <a href="profile.html" class="nav-item" data-page="profile"><span class="ic">🪪</span>حسابي</a>
+</nav>
+
+<script src="js/colleges-data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/materials.js"></script>
+</body>
+</html>

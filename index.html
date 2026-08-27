@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الرئيسية — بوابة NUSC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/colleges.css">
+<style>
+  .quick-links{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-top:6px; }
+  .quick-link .k-ic{ width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:var(--gold-soft); font-size:20px; margin-bottom:12px; }
+  .quick-link h3{ font-size:15.5px; margin:0 0 6px; }
+  .quick-link p{ font-size:13px; color:var(--sub); margin:0; line-height:1.8; }
+
+  /* مودال معاينة تبديل الكلية (وضع عرض/تجربة) */
+  .modal-backdrop{ position:fixed; inset:0; background:rgba(35,38,43,.4); z-index:90; display:none; align-items:center; justify-content:center; padding:20px; }
+  .modal-backdrop.open{ display:flex; }
+  .modal{ background:#fff; border-radius:20px; padding:22px; max-width:520px; width:100%; max-height:80vh; overflow:auto; }
+  .modal h3{ margin:0 0 14px; font-size:16px; }
+  .college-opt{ display:flex; align-items:center; gap:10px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; margin-bottom:8px; cursor:pointer; font-weight:700; font-size:13.5px; transition:.2s ease; }
+  .college-opt:hover{ border-color:var(--gold); background:var(--gold-soft); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-row">
+    <div class="brand">
+      <div class="logo-dot">N</div>
+      <div>
+        <div class="brand-name">NUSC</div>
+        <div class="brand-sub">بوابة الطالب</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span class="college-chip" data-role="college-chip"></span>
+      <div class="menu-wrap">
+        <button class="menu-btn" data-role="menu-btn" aria-label="خيارات إضافية">⋮</button>
+        <div class="menu-dropdown" data-role="menu-dropdown">
+          <div class="menu-item" data-action="switch-college">⚡ تبديل الكلية للمعاينة</div>
+          <div class="menu-item">⚙️ الإعدادات</div>
+          <div class="menu-item">🆘 المساعدة والدعم</div>
+          <div class="menu-sep"></div>
+          <div class="menu-item">🚪 تسجيل الخروج</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-wash"></div>
+  <div class="hero-motif" id="motif"></div>
+  <div class="hero-content">
+    <span class="hero-badge" id="badge"></span>
+    <h1 id="collegeTitle"></h1>
+    <p id="collegeTag"></p>
+    <div class="hero-actions">
+      <a href="materials.html" class="btn primary">📚 مستودع الكتب والمحاضرات</a>
+      <a href="ai-hub.html" class="btn ghost">🤖 المساعد الذكي المركزي</a>
+    </div>
+  </div>
+</section>
+
+<main class="container section">
+  <h2>الوصول السريع</h2>
+  <div class="quick-links">
+    <a href="materials.html" class="card quick-link">
+      <div class="k-ic">📚</div>
+      <h3>المقررات والمحتوى الدراسي</h3>
+      <p>ارفع كتبك، وأضف روابط أو فيديوهات شرح تحت كل مادة.</p>
+    </a>
+    <a href="ai-hub.html" class="card quick-link">
+      <div class="k-ic">🤖</div>
+      <h3>المساعد الذكي المركزي</h3>
+      <p>أداة واحدة تجمع عدة مصادر معرفية للإجابة على أسئلتك.</p>
+    </a>
+    <a href="profile.html" class="card quick-link">
+      <div class="k-ic">🪪</div>
+      <h3>الملف الشخصي الكامل</h3>
+      <p>بياناتك الشخصية والأكاديمية المسجّلة في المنصة.</p>
+    </a>
+  </div>
+</main>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item" data-page="home"><span class="ic">🏠</span>الرئيسية</a>
+  <a href="materials.html" class="nav-item" data-page="materials"><span class="ic">📚</span>المقررات</a>
+  <a href="ai-hub.html" class="nav-item" data-page="ai"><span class="ic">🤖</span>الذكاء الاصطناعي</a>
+  <a href="profile.html" class="nav-item" data-page="profile"><span class="ic">🪪</span>حسابي</a>
+</nav>
+
+<div class="modal-backdrop" id="collegeSwitchModal">
+  <div class="modal">
+    <h3>⚡ تبديل الكلية للمعاينة</h3>
+    <div id="collegeOptions"></div>
+    <button class="btn ghost sm" onclick="document.getElementById('collegeSwitchModal').classList.remove('open')">إغلاق</button>
+  </div>
+</div>
+
+<script src="js/colleges-data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>
